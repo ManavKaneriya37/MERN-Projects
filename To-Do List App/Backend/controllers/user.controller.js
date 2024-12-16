@@ -100,8 +100,6 @@ module.exports.sendOtp = async (req, res) => {
 module.exports.verifyOtp = async (req, res) => {
     const {email, OTP} = req.body;
 
-    console.log(otpStore)
-
     const storedOtp = otpStore.get(email);
     if(!storedOtp) {
         return res.status(400).json({error: 'Something went wrong'})

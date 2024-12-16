@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserDataContext } from '../../../contexts/userContext';
+import Loading from '../../components/Loading';
 import axios from 'axios';
 
 const SignUp = () => {
@@ -11,8 +11,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isMatchPassword, setIsMatchPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -21,6 +21,8 @@ const SignUp = () => {
       email: email,
       password: password
     }
+
+    setIsLoading(true);
     const sendOtp = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/send-otp`, {email});
     if(sendOtp.status === 200) {
       navigate('/verify-otp', {state: newuser});
@@ -40,8 +42,11 @@ const SignUp = () => {
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
       <div className="bg-white p-10 rounded-xl shadow-md w-[75vh] mx-10 px-10">
+        {isLoading ? (
+          <Loading loading={isLoading} />
+        ) : (
+          <form onSubmit={handleSubmit}>
         <h2 className="text-2xl text-center font-bold mb-4">Sign Up</h2>
-        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullname">
               Full Name
@@ -113,6 +118,7 @@ const SignUp = () => {
             </button>
           </div>
         </form>
+        )}
       </div>
     </div>
   );
