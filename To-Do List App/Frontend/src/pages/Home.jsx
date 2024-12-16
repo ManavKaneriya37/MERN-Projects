@@ -1,23 +1,48 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import PriorityTasks from "../components/PriorityTasks";
 import AllTasks from '../components/AllTasks'
 import TodaysTasks from "../components/TodaysTasks";
 import CreateTask from "./CreateTask";
+import axios from 'axios'
 
 const Home = () => {
 
+
   const [openCreateBox, setOpenCreateBox] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  
+  const getProfile = async () => {
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('todo-token')}`
+      },
+    });
+
+    if(response.status == 200) {
+      return response.data;
+    }
+  }
+
+ useEffect(() => {
+  const fetchProfile = async () => {
+    const profile = await getProfile();
+    setUserProfile(profile);
+  }
+  fetchProfile();
+ }, []);
+
+
 
   return (
     <div class="container relative min-h-screen w-full p-6 bg-zinc-900 text-white">
       {openCreateBox ? (
-        <div className="absolute rounded top-20 left-1/2 -translate-x-1/2 border-white border-[1px] ">
+        <div className="absolute rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-white border-[1px] ">
           <i class="ri-close-large-line p-3 block h-5 justify-self-end cursor-pointer" onClick={() => setOpenCreateBox(!openCreateBox)}></i>
-          <CreateTask />
+          <CreateTask profile={userProfile} setOpenCreateBox={setOpenCreateBox} />
         </div>
       ) : null}
       <div className="flex items-center justify-between">
-        <h1 class="text-2xl">WELCOME USER</h1>
+        <h1 class="text-2xl">WELCOME {userProfile?.fullname}</h1>
         <div className="profile p-5 rounded-full bg-white"></div>
       </div>
       <div class="flex justify-start my-5 rounded-md">

@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
-import { UserDataContext } from '../../contexts/userContext';
+import { UserDataContext } from '../../contexts/UserContext';
 
 const UserProtectedWrapper = ({children}) => {
 
@@ -21,7 +21,8 @@ const UserProtectedWrapper = ({children}) => {
         }
     }).then((response) => {
         if(response.status === 201) {
-            setUser(response.data.user);
+            console.log(response.data);
+            setUser(response.data);
             navigate('/home')
         }
     }).catch((err) => {
