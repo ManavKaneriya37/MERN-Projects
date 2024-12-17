@@ -47,3 +47,16 @@
   .switch--horizontal input ~ input:checked ~ .toggle-outside .toggle-inside {
     left: 3.25rem;
   }
+  .prioritysection::-webkit-scrollbar {
+    /* display: none; */
+    background-color: transparent;
+    border-radius: 10px;
+    height: 10px;
+  }
+  .prioritysection::-webkit-scrollbar-thumb{
+    background-color: #1e1e1e;
+    border-radius: 10px;
+  }
+  .prioritysection {
+    padding: 7px 0;
+  }

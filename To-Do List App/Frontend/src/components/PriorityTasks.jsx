@@ -1,40 +1,64 @@
-import React from 'react'
+import React, { useCallback, useEffect } from "react";
+import axios from "axios";
 
-const PriorityTasks = () => {
+const PriorityTasks = ({ profile, reloadTasks }) => {
+  const [priorityTodos, setPriorityTodos] = React.useState([]);
+
+  const fetchPriorityTodos = useCallback(async () => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/todo/priority`,
+      { userid: profile._id },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("todo-token")}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      setPriorityTodos(response.data);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (profile) fetchPriorityTodos();
+  }, [profile, reloadTasks]);
+
+  console.log(priorityTodos);
+
   return (
-    <div className='my-10'>
-        <h2 class="text-xl mt-4">Priority Tasks</h2>
-      <div class="grid grid-cols-3 gap-4 mt-4">
-        <div class="bg-zinc-800 rounded-lg p-4">
-          <div class="bg-blue-500 rounded-full px-4 py-2 text-xs w-fit text-white mb-2">
-            PERSONAL
+    <div className="my-10 w-full overflow-hidden">
+      <h2 class="text-xl mt-4">Priority Tasks</h2>
+      <div className="prioritysection w-full flex items-start overflow-x-auto gap-4">
+      {priorityTodos.map((todo) => (
+          <div class="mt-4" key={todo._id}>
+            <div class="bg-zinc-800 rounded-lg h-fit p-4 mt-2 w-[15vw]">
+              <header class="flex justify-between gap-4 items-center">
+                <div class="bg-blue-500 w-fit rounded-full px-3 py-1 text-xs text-white mb-2">
+                  {todo.category}
+                </div>
+                <div
+                  class={`${
+                    todo.priority == "Medium"
+                      ? "bg-orange-500"
+                      : todo.priority == "High"
+                      ? "bg-red-500"
+                      : todo.priority == "Low"
+                      ? "bg-green-500"
+                      : "bg-zinc-700"
+                  } w-28 rounded-full px-3 py-[4px] text-center text-xs text-white mb-2`}
+                >
+                  {todo.priority}
+                </div>
+              </header>
+              <p class="text-base font-semibold mb-1">{todo.title}</p>
+              <p class="text-xs">{todo.date.split("T")[0]}</p>
+            </div>
           </div>
-          <p class="text-lg font-semibold">
-            Creating a new Indian Bank saving account
-          </p>
-          <p class="text-sm">Tue, 18 October 2023</p>
-        </div>
-        <div class="bg-zinc-800 rounded-lg p-4">
-          <div class="bg-violet-600 rounded-full px-4 py-2 text-xs w-fit text-white mb-2">
-            Sport
-          </div>
-          <p class="text-lg font-semibold">
-            Football semi-final in Chennai FC Tournaments
-          </p>
-          <p class="text-sm">Tue, 18 October 2023</p>
-        </div>
-        <div class="bg-zinc-800 rounded-lg p-4">
-          <div class="bg-green-500 rounded-full px-4 py-2 text-xs w-fit text-white mb-2">
-            UI Design
-          </div>
-          <p class="text-lg font-semibold">
-            Creating a basic level of UI for website
-          </p>
-          <p class="text-sm">Tue, 18 October 2023</p>
-        </div>
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PriorityTasks
+export default PriorityTasks;

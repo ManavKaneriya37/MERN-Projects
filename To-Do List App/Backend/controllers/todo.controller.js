@@ -16,8 +16,8 @@ module.exports.createTodo = async (req, res) => {
 
         const {title, description, user} = req.body;
         const date = req.body?.date || fulldate;
-        const priority = req.body?.priority || 'none';
-        const category = req.body?.category || 'personal';
+        const priority = req.body?.priority || 'None';
+        const category = req.body?.category || 'Personal';
 
         if(!title || !description || !user)
             return res.status(400).json({ message: "Either Title or description or user id is missing" });
@@ -42,6 +42,13 @@ module.exports.createTodo = async (req, res) => {
 module.exports.getAllTodos = async (req, res) => {
     const userid = req.body.userid;
 
-    const todos = await todoModel.find({user: userid}).populate('user');
+    const todos = await todoModel.find({user: userid})
     res.status(200).json(todos);    
+}
+
+module.exports.getPriorityTodos = async (req, res) => {
+    const userid = req.body.userid;
+
+    const allPriorityTodos = await todoModel.find({user: userid, priority: {$ne: 'none'} });
+    res.status(200).json(allPriorityTodos);
 }

@@ -13,4 +13,6 @@ router.post('/create', [
 
 router.post('/all', userAuth.authUser, todoController.getAllTodos)
 
+router.post('/priority', userAuth.authUser, todoController.getPriorityTodos);
+
 module.exports = router;
