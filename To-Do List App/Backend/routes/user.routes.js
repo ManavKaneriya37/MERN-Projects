@@ -22,6 +22,8 @@ router.post('/login', [
 router.post('/send-otp', userController.sendOtp)
 router.post('/verify-otp', userController.verifyOtp)
 
-router.get('/profile', userAuth.authUser , userController.getProfile)
+router.post('/profile', userAuth.authUser , userController.getProfile)
+
+router.post('/logout', userAuth.authUser, userController.logout)
 
 module.exports = router;

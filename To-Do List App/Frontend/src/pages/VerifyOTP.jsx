@@ -59,8 +59,8 @@ const verifyOTP = () => {
   };
 
   return (
-    <div className="h-screen w-full flex justify-center items-center">
-      <div className="w-1/3 bg-zinc-100/70 p-5 py-10 rounded-2xl flex flex-col justify-center items-center">
+    <div className="h-screen w-full bg-zinc-900 flex justify-center items-center">
+      <div className="w-1/3 text-white bg-zinc-800/70 p-5 py-10 rounded-2xl flex flex-col justify-center items-center">
         <h1 className="text-center mb-3 text-2xl">Enter OTP</h1>
         <p className='text-xs mb-10 mx-10'>The OTP is sent on your email: <span className='italic text-xs'>{email ? email : 'google@gmail.com'}</span>.</p>
         <div className="flex space-x-4">
@@ -68,7 +68,7 @@ const verifyOTP = () => {
             <input
               key={index}
               type="text"
-              className="p-2 w-14 bg-zinc-50 h-14 border-2 border-gray-900/30 rounded-lg text-center text-2xl"
+              className="p-2 w-14 bg-zinc-800 border-[1px]  h-14 border-gray-700/90 rounded-lg text-center text-2xl"
               ref={ref}
               onChange={handleChange(index)}
               onKeyDown={handleBack(index)}

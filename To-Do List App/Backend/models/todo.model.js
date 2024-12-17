@@ -14,10 +14,6 @@ const todoSchema = mongoose.Schema({
     date: {
         type: String,
     },
-    completed: {
-        type: Boolean,
-        default: false
-    },
     priority: {
         type: String,
         trim: true,

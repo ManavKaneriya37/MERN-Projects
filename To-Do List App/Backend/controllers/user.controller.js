@@ -3,6 +3,7 @@ const {validationResult} = require('express-validator')
 const userService = require('../Services/user.service');
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer');
+const blackListTokenModel = require('../models/blackListToken.model')
 
 const otpStore = new Map();
 
@@ -69,7 +70,7 @@ module.exports.sendOtp = async (req, res) => {
     });
 
     otpStore.set(email, otp);
-    console.log(otpStore)
+    
     setTimeout(() => otpStore.delete(email), 5 * 60 * 1000);
 
     const transporter = nodemailer.createTransport({
@@ -117,4 +118,13 @@ module.exports.verifyOtp = async (req, res) => {
 module.exports.getProfile = (req, res) => {
     const user = req.user;
     res.status(200).json(user);
+}
+
+module.exports.logout = async (req, res) => {
+    res.clearCookie('token');
+    const token = req.cookies?.token || req.headers.authorization.split(' ')[1];
+
+    await blackListTokenModel.create({token});
+
+    res.status(200).json({message: 'Logged out successfully'});
 }

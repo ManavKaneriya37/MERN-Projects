@@ -49,7 +49,7 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
         <div>
         {allTodos && allTodos.map((todo) => (
           <div class="mt-4" key={todo._id}>
-            <Link to={`/home/todo/${todo._id}`} class="bg-zinc-800 block rounded-lg p-4 mt-2 w-[45vw]">
+            <Link to={`/home/todo/${todo._id}`} class="bg-zinc-800 px-4 block rounded-lg p-4 mt-2 w-[45vw]">
               <header class="flex justify-between gap-4 items-center">
                 <div class="bg-blue-500 w-fit rounded-full px-4 py-2 text-xs text-white mb-2">
                   {todo.category}
