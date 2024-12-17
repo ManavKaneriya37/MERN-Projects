@@ -3,7 +3,7 @@ const userModel = require('../models/user.model')
 
 module.exports.authUser = async (req, res, next) => {
     try {
-        const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+        const token = req.cookie?.token || req.headers.authorization?.split(' ')[1];
         if(!token) {
             return res.status(401).json({ message: 'Unauthorized with no token' });
         }
@@ -21,6 +21,7 @@ module.exports.authUser = async (req, res, next) => {
             return res.status(401).json({message: 'Unauthorized to get user'});
         }
     } catch (error) {
+        console.log(error.message)
         return res.status(401).json({message: 'Unauthorized to auth user'})
     }
 }

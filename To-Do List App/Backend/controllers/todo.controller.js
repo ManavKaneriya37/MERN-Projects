@@ -14,8 +14,6 @@ module.exports.createTodo = async (req, res) => {
         const year = new Date().getFullYear();
         const fulldate = `${year}-${month + 1}-${todaydate}`;
 
-        console.log(req.body);
-
         const {title, description, user} = req.body;
         const date = req.body?.date || fulldate;
         const priority = req.body?.priority || 'none';
@@ -39,4 +37,11 @@ module.exports.createTodo = async (req, res) => {
         console.log(error);
         res.status(500).json({ message: 'Error creating todo' })
     }
+}
+
+module.exports.getAllTodos = async (req, res) => {
+    const userid = req.body.userid;
+
+    const todos = await todoModel.find({user: userid}).populate('user');
+    res.status(200).json(todos);    
 }

@@ -6,7 +6,7 @@ import Loading from '../components/Loading'
 
 const label = { inputProps: { "aria-label": "Priority" } };
 
-const CreateTask = ({profile, setOpenCreateBox}) => {
+const CreateTask = ({profile, setOpenCreateBox, onTaskCreated}) => {
   const [openPriority, setOpenPriority] = useState(false);
   const [selectedPriority, setSelectedPriority] = useState(null);
   const [isLoading, setIsLoading] = useState(false)
@@ -39,9 +39,14 @@ const CreateTask = ({profile, setOpenCreateBox}) => {
       user: profile._id
     }
     setIsLoading(true);
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/todo/create`, todo);
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/todo/create`,todo, {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('todo-token')}`
+      }
+    });
     if(response.status === 201) {
       setOpenCreateBox(false);
+      onTaskCreated();
       navigate('/home')
     }
   }
@@ -49,7 +54,7 @@ const CreateTask = ({profile, setOpenCreateBox}) => {
 
 
   return (
-    <div className="bg-zinc-900 text-white w-full p-6 flex items-center flex-col">
+    <div className="bg-zinc-900 text-white w-full p-4 flex items-center flex-col">
       {isLoading ? (<Loading loading={isLoading} />) : (
         <div>
           <h1 className="text-3xl">Create New Task</h1>

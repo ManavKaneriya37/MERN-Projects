@@ -29,7 +29,7 @@ module.exports.registerUser = async (req, res) => {
     res.status(201).json({token, user})
 }
 
-module.exports.loginUser = async (req, res) => {
+module.exports.loginUser = async (  req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });

@@ -12,7 +12,7 @@ const todoSchema = mongoose.Schema({
         trim: true,
     },
     date: {
-        type: Date,
+        type: String,
     },
     completed: {
         type: Boolean,

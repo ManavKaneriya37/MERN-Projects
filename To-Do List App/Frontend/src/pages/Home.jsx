@@ -10,6 +10,7 @@ const Home = () => {
 
   const [openCreateBox, setOpenCreateBox] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [reloadTasks, setReloadTasks] = useState(false);
   
   const getProfile = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
@@ -22,7 +23,6 @@ const Home = () => {
       return response.data;
     }
   }
-
  useEffect(() => {
   const fetchProfile = async () => {
     const profile = await getProfile();
@@ -31,14 +31,16 @@ const Home = () => {
   fetchProfile();
  }, []);
 
-
+ const handleTaskCreated = () => {
+  setReloadTasks(prev => !prev);
+ }
 
   return (
     <div class="container relative min-h-screen w-full p-6 bg-zinc-900 text-white">
       {openCreateBox ? (
-        <div className="absolute rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-white border-[1px] ">
-          <i class="ri-close-large-line p-3 block h-5 justify-self-end cursor-pointer" onClick={() => setOpenCreateBox(!openCreateBox)}></i>
-          <CreateTask profile={userProfile} setOpenCreateBox={setOpenCreateBox} />
+        <div className="absolute rounded top-1 left-1/2 -translate-x-1/2 -translate-y-3/2 border-white border-[1px] ">
+          <i className="ri-close-large-line p-3 block h-5 bg-zinc-900 w-full text-right cursor-pointer" onClick={() => setOpenCreateBox(!openCreateBox)}></i>
+          <CreateTask profile={userProfile} setOpenCreateBox={setOpenCreateBox} onTaskCreated={handleTaskCreated} />
         </div>
       ) : null}
       <div className="flex items-center justify-between">
@@ -68,7 +70,7 @@ const Home = () => {
       </div>
       <PriorityTasks />
       <div className="flex justify-between">
-        <AllTasks />
+        <AllTasks profile={userProfile} reloadTasks={reloadTasks}/>
         <TodaysTasks />
       </div>
     </div>
