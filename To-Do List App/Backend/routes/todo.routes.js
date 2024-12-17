@@ -15,4 +15,12 @@ router.post('/all', userAuth.authUser, todoController.getAllTodos)
 
 router.post('/priority', userAuth.authUser, todoController.getPriorityTodos);
 
+router.post('/todays', userAuth.authUser, todoController.getTodaysTodos);
+
+router.post('/complete', userAuth.authUser, todoController.completeTask);
+
+router.post('/get', userAuth.authUser, todoController.getTodo);
+
+router.post('/update', userAuth.authUser, todoController.updateData);
+
 module.exports = router;

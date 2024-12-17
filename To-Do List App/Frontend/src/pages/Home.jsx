@@ -48,6 +48,7 @@ const Home = () => {
             profile={userProfile}
             setOpenCreateBox={setOpenCreateBox}
             onTaskCreated={handleTaskCreated}
+            
           />
         </div>
       ) : null}
@@ -75,11 +76,11 @@ const Home = () => {
         </button>
       </div>
 
-      <PriorityTasks profile={userProfile} reloadTasks={reloadTasks} />
+      <PriorityTasks profile={userProfile} setReloadTasks={setReloadTasks} reloadTasks={reloadTasks} />
 
       <div className="flex gap-2 justify-between">
-        <AllTasks profile={userProfile} reloadTasks={reloadTasks} />
-        <TodaysTasks />
+        <AllTasks profile={userProfile} reloadTasks={reloadTasks} setReloadTasks={setReloadTasks} />
+        <TodaysTasks profile={userProfile} reloadTasks={reloadTasks} setReloadTasks={setReloadTasks} />
       </div>
     </div>
   );
