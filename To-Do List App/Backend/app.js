@@ -10,6 +10,14 @@ const userAuth = require('./middlewares/userAuth')
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
+app.use((req, res, next) => {
+    if (req.method === "GET" && !req.url.startsWith("/api")) {
+      res.sendFile(path.join(__dirname, "build", "index.html"));
+    } else {
+      next();
+    }
+  });
+  
 connectToDb();
 
 app.use('/users',userRoutes);

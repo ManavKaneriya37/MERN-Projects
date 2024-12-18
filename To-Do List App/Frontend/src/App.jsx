@@ -6,7 +6,7 @@ import VerifyOTP from "./pages/VerifyOTP";
 import Home from "./pages/Home";
 import UserProtectedWrapper from "./components/UserProtectedWrapper";
 import Welcome from "./pages/Welcome";
-import TodoDatails from "./pages/TodoDatails";
+import TodoDetails from "./pages/TodoDetails";
 
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
           path="/home/todo/:todoid"
           element={
             <UserProtectedWrapper>
-              <TodoDatails />
+              <TodoDetails />
             </UserProtectedWrapper>
           }
         />

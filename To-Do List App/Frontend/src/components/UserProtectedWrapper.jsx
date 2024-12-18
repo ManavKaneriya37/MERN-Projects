@@ -22,7 +22,7 @@ const UserProtectedWrapper = ({ children }) => {
             if (response.status === 200) {
                 console.log(response.data);
                 setUser (response.data);
-                navigate('/home');
+                // navigate('/home');
             }
         }).catch((err) => {
             localStorage.removeItem('todo-token');

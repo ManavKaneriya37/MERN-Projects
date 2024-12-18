@@ -23,4 +23,6 @@ router.post('/get', userAuth.authUser, todoController.getTodo);
 
 router.post('/update', userAuth.authUser, todoController.updateData);
 
+router.post('/filter', userAuth.authUser, todoController.filterData);
+
 module.exports = router;

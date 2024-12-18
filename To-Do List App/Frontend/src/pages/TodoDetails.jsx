@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-const TodoDatails = () => {
+const TodoDetails = () => {
   const { todoid } = useParams();
 
   const [formData, setFormData] = useState({});
@@ -140,7 +140,7 @@ const TodoDatails = () => {
               </div>
               <div className="flex items-center gap-5">
               <button onClick={handleChanges} className="px-7 py-2 bg-blue-500 rounded-md mt-7 hover:bg-blue-600 ease duration-150">Make changes</button>
-              <Link to='/home' className="block px-7 py-2 border-red-500 border-[1px] rounded-md mt-7 hover:bg-red-600 ease-in duration-150">Go back</Link>
+              <Link to='/home' className="block px-7 py-2 border-red-500 border-[1px] rounded-md mt-7 hover:bg-red-600 ease-in duration-150">Descard Changes</Link>
               </div>
             </div>
           </div>
@@ -154,4 +154,4 @@ const TodoDatails = () => {
   );
 };
 
-export default TodoDatails;
+export default TodoDetails;
