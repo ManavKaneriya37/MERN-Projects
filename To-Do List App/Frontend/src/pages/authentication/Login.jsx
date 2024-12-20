@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserDataContext } from "../../../contexts/userContext";
 import axios from "axios";
 
@@ -74,12 +74,12 @@ const Login = () => {
             />
           </div>
           <div className="flex flex-col gap-7">
-            <a
+            <Link
               className="inline-block align-baseline font-semibold text-sm text-blue-500 hover:text-blue-800"
-              href="#"
+              to='/login/reset/email' 
             >
               Forgot Password?
-            </a>
+            </Link>
             <button
               className="bg-blue-500 hover:bg-blue-700 duration-150 ease-in  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
