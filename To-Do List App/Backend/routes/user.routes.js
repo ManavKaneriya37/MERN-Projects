@@ -23,6 +23,7 @@ router.post('/send-otp', userController.sendOtp)
 router.post('/verify-otp', userController.verifyOtp)
 
 router.post('/profile', userAuth.authUser , userController.getProfile)
+router.post('/login/change-password', userController.changePassword);
 
 router.post('/logout', userAuth.authUser, userController.logout)
 
