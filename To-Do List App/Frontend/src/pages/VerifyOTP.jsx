@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useRef, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "remixicon/fonts/remixicon.css";
-import { UserDataContext } from "../../contexts/userContext";
+import { UserDataContext } from "../contexts/UserContext";
 
 const verifyOTP = () => {
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
