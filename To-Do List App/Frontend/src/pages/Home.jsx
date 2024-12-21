@@ -51,11 +51,11 @@ const Home = () => {
   }
 
   return (
-    <div class="container relative min-h-screen w-full p-6 bg-zinc-900 text-white">
+    <div class={`container relative min-h-screen ${openCreateBox ? 'h-screen overflow-hidden' : ''} w-full p-6 bg-zinc-900 text-white`}>
       {openCreateBox ? (
-        <div className="absolute rounded top-1 left-1/2 -translate-x-1/2 -translate-y-3/2 border-white border-[1px] ">
+        <div className="absolute rounded top-1 left-1 min-h-screen h-screen w-full">
           <i
-            className="ri-close-large-line p-3 block h-5 bg-zinc-900 w-full text-right cursor-pointer"
+            className="ri-close-large-line p-3 block h-9 bg-zinc-900 w-full text-right cursor-pointer"
             onClick={() => setOpenCreateBox(!openCreateBox)}
           ></i>
           <CreateTask

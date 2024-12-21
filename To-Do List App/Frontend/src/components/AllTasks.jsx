@@ -104,11 +104,11 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
         <div className="relative">
           <i
             onClick={() => setFilterPanelOpen((prev) => !prev)}
-            class="text-xl ri-filter-fill cursor-pointer"
+            class="text-xl ri-filter-fill cursor-pointer relative z-10"
           ></i>
           <section
             ref={filterPanelRef}
-            className="absolute -left-32  min-h-10 opacity-0 w-36 px-3 py-2 bg-zinc-700 rounded-md flex flex-col gap-4 items-start justify-center"
+            className="absolute z-10 -left-32  min-h-10 opacity-0 w-36 px-3 py-2 bg-zinc-700 rounded-md flex flex-col gap-4 items-start justify-center"
           >
             <h4 className="text-lg font-semibold">Filter By: </h4>
             {categories?.map((category) => (
@@ -127,34 +127,33 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
           {allTodos &&
             allTodos.map((todo) => (
               <div class="mt-4" key={todo._id}>
-                <a
-                
-                  href={`/home/todo/${todo._id}`}
-                  class="bg-zinc-800 px-4 block rounded-lg p-4 mt-2 w-[45vw]"
+                <div
+                  class="bg-zinc-800 xl:px-4 overflow-hidden overflow-x-auto block rounded-lg p-4 mt-2 w-[45vw]"
                 >
-                  <header class="flex justify-between gap-4 items-center">
-                    <div class="bg-blue-500 w-fit rounded-full px-4 py-2 text-xs text-white mb-2">
+                  <header class="xl:flex xl:justify-between xl:gap-4 gap-1 items-center">
+                    <div class="xl:bg-blue-500 border-b-[1px] border-b-blue-500 xl:w-fit w-full text-center rounded-full px-4 xl:py-2 py-1 text-xs text-white mb-2">
                       {todo.category}
                     </div>
                     <div
                       class={`${
                         todo.priority == "Medium"
-                          ? "bg-orange-500"
+                          ? "xl:bg-orange-500 border-[1px] border-orange-500"
                           : todo.priority == "High"
-                          ? "bg-red-500"
+                          ? "xl:bg-red-500 border-[1px] border-red-500"
                           : todo.priority == "Low"
-                          ? "bg-green-500"
-                          : "bg-zinc-700"
-                      } w-28 rounded-full px-4 py-[6px] text-center text-xs text-white mb-2`}
+                          ? "xl:bg-green-500 border-[1px] border-green-500"
+                          : "xl:bg-zinc-700 border-[1px] border-zinc-500"
+                      } xl:w-28 w-full text-xs rounded-full px-4 lg:px-0 xl:py-[6px] py-1 text-center text-white mb-2`}
                     >
                       {todo.priority}
                     </div>
                   </header>
                   <p class="text-lg font-semibold">{todo.title}</p>
                   <p class="text-sm">{todo.date.split("T")[0]}</p>
+                  <div className="flex w-full items-center justify-between pr-5">
                   <p
                     onClick={() => handleCompleteTask(todo._id)}
-                    className={`mt-2 text-sm cursor-pointer ${
+                    className={`mt-2 xl:text-sm text-xs cursor-pointer ${
                       todo.date.split("T")[0] == todaysDate
                         ? "text-blue-500"
                         : "text-red-400"
@@ -164,7 +163,9 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
                       ? "Mark as Completed"
                       : "Delete"}
                   </p>
-                </a>
+                  <a href={`/home/todo/${todo._id}`} className="text-sm text-blue-600">View</a>
+                  </div>
+                </div>
               </div>
             ))}
         </div>

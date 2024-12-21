@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect} from 'react'
 import axios from 'axios'
 
-
 const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
 
   const [todaysTodos, setTodaysTodos] = React.useState([]);
@@ -24,7 +23,7 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
 
   useEffect(() => {
     if (profile) fetchTodaysTodos();
-  }, [profile, reloadTasks]);
+  }, [profile, reloadTasks, todaysTodos]);
 
   const handleCompleteTask = async todoid => { 
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/todo/complete`, {todoid}, {
@@ -38,7 +37,6 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
     }
   }
 
-
   return (
     <div>
         <h2 class="text-xl mt-4 inline-block mr-5">Today's Tasks</h2>
@@ -46,19 +44,19 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
           <div>
           {todaysTodos && todaysTodos.map(todo => (
              <div class="mt-4">
-             <div class="bg-zinc-800 rounded-lg p-4 mt-2 w-[45vw]">
-               <div className='flex items-center justify-between'><div class="bg-blue-500 w-fit rounded-full px-4 py-2 text-xs text-white mb-2">
+             <div class="block bg-zinc-800 rounded-lg p-4 mt-2 w-[45vw]">
+               <div className='xl:flex items-center justify-between'><div class="xl:bg-blue-500 border-b-[1px] border-b-blue-500 xl:w-fit w-full text-center rounded-full px-4 xl:py-2 py-1 text-xs text-white mb-2">
                  {todo.category}
                </div>
                <div
                   class={`${
                     todo.priority == "Medium"
-                      ? "bg-orange-500"
+                      ? "xl:bg-orange-500 border-[1px] border-orange-500"
                       : todo.priority == "High"
-                      ? "bg-red-500"
+                      ? "xl:bg-red-500 border-[1px] border-red-500"
                       : todo.priority == "Low"
-                      ? "bg-green-500"
-                      : "bg-zinc-700"
+                      ? "xl:bg-green-500 border-[1px] border-green-500"
+                      : "xl:bg-zinc-700 border-[1px] border-zinc-500"
                   } w-28 rounded-full px-4 py-[6px] text-center text-xs text-white mb-2`}
                 >
                   {todo.priority}
@@ -66,9 +64,11 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
                <p class="text-lg font-semibold">
                 {todo.title}
                </p>
-               <p onClick={() => handleCompleteTask(todo._id)} className='mt-2 cursor-pointer text-sm text-blue-500'>Mark as Completed</p>
+               <div className='flex w-full items-center justify-between pr-8'>
+               <p onClick={() => handleCompleteTask(todo._id)} className='mt-2 cursor-pointer xl:text-sm text-xs text-blue-500'>Mark as Completed</p>
+               <a href={`/home/todo/${todo._id}`} className='mt-2 cursor-pointer text-sm text-blue-600'>View</a>
+               </div>
              </div>
-   
              </div>
           ))}
         </div>

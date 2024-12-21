@@ -104,7 +104,7 @@ const TodoDetails = () => {
               <div className="flex items-center gap-10 my-6">
                 <div
                   className={`border-[1px] cursor-pointer duration-200 ease-in-out border-red-500 w-20 h-9 flex items-center justify-center rounded ${
-                    formData.priority === "High" ? "bg-red-500 text-white" : ""
+                    formData.priority == "High" ? "bg-red-500 text-white" : ""
                   }`}
                   onClick={() => handlePrioritySelect("High")}
                 >
@@ -112,7 +112,7 @@ const TodoDetails = () => {
                 </div>
                 <div
                   className={`border-[1px] cursor-pointer border-orange-500 w-20 h-9 flex items-center justify-center rounded ${
-                    formData.priority === "Medium"
+                    formData.priority == "Medium"
                       ? "bg-orange-500 text-white"
                       : ""
                   }`}
@@ -122,7 +122,7 @@ const TodoDetails = () => {
                 </div>
                 <div
                   className={`border-[1px] cursor-pointer border-green-500 w-20 h-9 flex items-center justify-center rounded ${
-                    formData.priority === "Low" ? "bg-green-500 text-white" : ""
+                    formData.priority == "Low" ? "bg-green-500 text-white" : ""
                   }`}
                   onClick={() => handlePrioritySelect("Low")}
                 >

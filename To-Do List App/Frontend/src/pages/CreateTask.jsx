@@ -54,7 +54,7 @@ const CreateTask = ({profile, setOpenCreateBox, onTaskCreated}) => {
 
 
   return (
-    <div className="bg-zinc-900 text-white w-full p-4 flex items-center flex-col">
+    <div className="relative bg-zinc-900 text-white w-full z-50 p-4 flex items-center min-h-screen h-screen flex-col">
       {isLoading ? (<Loading loading={isLoading} />) : (
         <div>
           <h1 className="text-3xl">Create New Task</h1>
