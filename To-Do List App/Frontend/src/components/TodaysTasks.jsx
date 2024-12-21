@@ -20,7 +20,7 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
       setTodaysTodos(response.data);
     }
   }, [profile]);
-
+  
   useEffect(() => {
     if (profile) fetchTodaysTodos();
   }, [profile, reloadTasks, todaysTodos]);
