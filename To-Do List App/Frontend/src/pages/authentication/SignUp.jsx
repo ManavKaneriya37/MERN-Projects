@@ -47,7 +47,7 @@ const SignUp = () => {
 
   return (
     <div className="h-screen flex justify-center items-center bg-zinc-900">
-      <div className="bg-zinc-800 text-white p-10 rounded-xl shadow-md w-[75vh] mx-10 px-10">
+      <div className="bg-zinc-800 text-white p-10 rounded-xl shadow-md xl:w-[75vh] mx-10 px-10">
         {isLoading ? (
           <Loading loading={isLoading} />
         ) : (

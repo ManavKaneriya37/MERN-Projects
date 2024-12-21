@@ -39,17 +39,17 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
 
   return (
     <div>
-        <h2 class="text-xl mt-4 inline-block mr-5">Today's Tasks</h2>
+        <h2 className="text-xl mt-4 inline-block mr-5">Today's Tasks</h2>
         {todaysTodos.length > 0 ? (
           <div>
           {todaysTodos && todaysTodos.map(todo => (
-             <div class="mt-4">
-             <div class="block bg-zinc-800 rounded-lg p-4 mt-2 w-[45vw]">
-               <div className='xl:flex items-center justify-between'><div class="xl:bg-blue-500 border-b-[1px] border-b-blue-500 xl:w-fit w-full text-center rounded-full px-4 xl:py-2 py-1 text-xs text-white mb-2">
+             <div className="mt-4">
+             <div className="block bg-zinc-800 rounded-lg p-4 mt-2 w-[45vw]">
+               <div className='xl:flex items-center justify-between'><div className="xl:bg-blue-500 border-b-[1px] border-b-blue-500 xl:w-fit w-full text-center rounded-full px-4 xl:py-2 py-1 text-xs text-white mb-2">
                  {todo.category}
                </div>
                <div
-                  class={`${
+                  className={`${
                     todo.priority == "Medium"
                       ? "xl:bg-orange-500 border-[1px] border-orange-500"
                       : todo.priority == "High"
@@ -61,7 +61,7 @@ const TodaysTasks = ({profile, reloadTasks, setReloadTasks}) => {
                 >
                   {todo.priority}
                 </div></div>
-               <p class="text-lg font-semibold">
+               <p className="text-lg font-semibold">
                 {todo.title}
                </p>
                <div className='flex w-full items-center justify-between pr-8'>

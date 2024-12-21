@@ -77,7 +77,7 @@ const verifyOTP = () => {
 
   return (
     <div className="h-screen w-full bg-zinc-900 flex justify-center items-center">
-      <div className="w-1/3 text-white bg-zinc-800/70 p-5 py-10 rounded-2xl flex flex-col justify-center items-center">
+      <div className="xl:w-1/3 mx-5 text-white bg-zinc-800/70 p-5 py-10 rounded-2xl flex flex-col justify-center items-center">
         <h1 className="text-center mb-3 text-2xl">Enter OTP</h1>
         <p className="text-xs mb-10 mx-10">
           The OTP is sent on your email:{" "}

@@ -96,23 +96,24 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
     <div>
       <div className="flex mt-4 items-center justify-between">
         <div className="flex items-center">
-          <h2 class="text-xl inline-block mr-5">All Tasks</h2>
-          <p class="text-sm inline-block opacity-60">
+          <h2 className="text-xl inline-block mr-5">All Tasks</h2>
+          <p className="text-sm inline-block opacity-60">
             {allTodos?.length || 0} Task
           </p>
         </div>
         <div className="relative">
           <i
             onClick={() => setFilterPanelOpen((prev) => !prev)}
-            class="text-xl ri-filter-fill cursor-pointer relative z-10"
+            className="text-xl ri-filter-fill cursor-pointer relative z-10"
           ></i>
           <section
             ref={filterPanelRef}
             className="absolute z-10 -left-32  min-h-10 opacity-0 w-36 px-3 py-2 bg-zinc-700 rounded-md flex flex-col gap-4 items-start justify-center"
           >
             <h4 className="text-lg font-semibold">Filter By: </h4>
-            {categories?.map((category) => (
+            {categories?.map((category, index) => (
               <p
+              key={index}
                 onClick={() => handleFilterSelection(category)}
                 className="text-sm cursor-pointer"
               >
@@ -126,16 +127,16 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
         <div>
           {allTodos &&
             allTodos.map((todo) => (
-              <div class="mt-4" key={todo._id}>
+              <div className="mt-4" key={todo._id}>
                 <div
-                  class="bg-zinc-800 xl:px-4 overflow-hidden overflow-x-auto block rounded-lg p-4 mt-2 w-[45vw]"
+                  className="bg-zinc-800 xl:px-4 overflow-hidden overflow-x-auto block rounded-lg p-4 mt-2 w-[45vw]"
                 >
-                  <header class="xl:flex xl:justify-between xl:gap-4 gap-1 items-center">
-                    <div class="xl:bg-blue-500 border-b-[1px] border-b-blue-500 xl:w-fit w-full text-center rounded-full px-4 xl:py-2 py-1 text-xs text-white mb-2">
+                  <header className="xl:flex xl:justify-between xl:gap-4 gap-1 items-center">
+                    <div className="xl:bg-blue-500 border-b-[1px] border-b-blue-500 xl:w-fit w-full text-center rounded-full px-4 xl:py-2 py-1 text-xs text-white mb-2">
                       {todo.category}
                     </div>
                     <div
-                      class={`${
+                      className={`${
                         todo.priority == "Medium"
                           ? "xl:bg-orange-500 border-[1px] border-orange-500"
                           : todo.priority == "High"
@@ -148,8 +149,8 @@ const AllTasks = ({ profile, reloadTasks, setReloadTasks }) => {
                       {todo.priority}
                     </div>
                   </header>
-                  <p class="text-lg font-semibold">{todo.title}</p>
-                  <p class="text-sm">{todo.date.split("T")[0]}</p>
+                  <p className="text-lg font-semibold">{todo.title}</p>
+                  <p className="text-sm">{todo.date.split("T")[0]}</p>
                   <div className="flex w-full items-center justify-between pr-5">
                   <p
                     onClick={() => handleCompleteTask(todo._id)}

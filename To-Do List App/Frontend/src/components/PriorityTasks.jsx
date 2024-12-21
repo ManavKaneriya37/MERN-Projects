@@ -41,19 +41,19 @@ const PriorityTasks = ({ profile, reloadTasks, setReloadTasks }) => {
 
   return (
     <div className="my-10 w-full overflow-hidden">
-      <h2 class="text-xl mt-4">Priority Tasks</h2>
+      <h2 className="text-xl mt-4">Priority Tasks</h2>
       {priorityTodos.length > 0 ? (
         <div className="prioritysection w-full flex items-start overflow-x-auto gap-4">
         {priorityTodos &&
           priorityTodos.map((todo) => (
-            <div class="mt-4" key={todo._id}>
-              <div class="bg-zinc-800 rounded-lg h-fit p-4 mt-2 xl:w-[15vw] w-fit">
-                <header class="flex justify-between gap-4 items-center">
-                  <div class="bg-blue-500 w-fit rounded-full px-3 py-1 text-xs text-white mb-2">
+            <div className="mt-4" key={todo._id}>
+              <div className="bg-zinc-800 rounded-lg h-fit p-4 mt-2 xl:w-[15vw] w-fit">
+                <header className="flex justify-between gap-4 items-center">
+                  <div className="bg-blue-500 w-fit rounded-full px-3 py-1 text-xs text-white mb-2">
                     {todo.category}
                   </div>
                   <div
-                    class={`${
+                    className={`${
                       todo.priority == "Medium"
                         ? "bg-orange-500"
                         : todo.priority == "High"
@@ -66,8 +66,8 @@ const PriorityTasks = ({ profile, reloadTasks, setReloadTasks }) => {
                     {todo.priority}
                   </div>
                 </header>
-                <a href={`/home/todo/${todo._id}`} class="block text-base font-semibold mb-1">{todo.title}</a>
-                <p class="text-xs">{todo.date.split("T")[0]}</p>
+                <a href={`/home/todo/${todo._id}`} className="block text-base font-semibold mb-1">{todo.title}</a>
+                <p className="text-xs">{todo.date.split("T")[0]}</p>
                 <p onClick={() => handleCompleteTask(todo._id)} className={`mt-2 cursor-pointer text-sm ${todo.date.split("T")[0] == todaysDate ? 'text-blue-500' : 'text-red-400'}`}>{todo.date.split("T")[0] == todaysDate ? 'Mark as Completed' : 'Delete'}</p>
               </div>
             </div>

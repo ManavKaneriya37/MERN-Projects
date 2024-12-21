@@ -51,7 +51,7 @@ const Home = () => {
   }
 
   return (
-    <div class={`container relative min-h-screen ${openCreateBox ? 'h-screen overflow-hidden' : ''} w-full p-6 bg-zinc-900 text-white`}>
+    <div className={`container relative min-h-screen ${openCreateBox ? 'h-screen overflow-hidden' : ''} w-full p-6 bg-zinc-900 text-white`}>
       {openCreateBox ? (
         <div className="absolute rounded top-1 left-1 min-h-screen h-screen w-full">
           <i
@@ -66,25 +66,12 @@ const Home = () => {
         </div>
       ) : null}
       <div className="flex items-center justify-between">
-        <h1 class="text-2xl">Welcome, {userProfile?.fullname}</h1>
+        <h1 className="text-2xl">Welcome, {userProfile?.fullname}</h1>
         <div onClick={handleLogout} className="border-red-500 border-[1px] hover:bg-red-500 ease duration-300 cursor-pointer rounded-lg px-4 py-1">Logout</div>
       </div>
-      <div class="flex justify-start my-5 rounded-md">
-        <button class="bg-zinc-800 hover:bg-zinc-700 duration-200 ease text-white py-2 px-4 rounded-xl flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 inline-block mr-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+      <div className="flex justify-start my-5 rounded-md">
+        <button className="bg-zinc-800 hover:bg-zinc-700 duration-200 ease text-white py-2 px-4 rounded-xl flex items-center">
+        <i className="ri-add-line mr-1"></i>
           <p onClick={() => setOpenCreateBox(!openCreateBox)}>Create Task</p>
         </button>
       </div>

@@ -43,12 +43,12 @@ const ResetPassword = () => {
     <div className="bg-zinc-900 h-screen flex justify-center items-center">
       <form onSubmit={handleSubmit} className="bg-zinc-800 text-white p-10 rounded-md shadow-md">
         <h2 className="text-2xl font-bold mb-8 text-center ">Reset Password</h2>
-        <div className="mb-4 w-[25vw]">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="newPassword">
+        <div className="mb-4 xl:w-[25vw]">
+          <label className="block text-white text-sm w-full font-bold mb-2" htmlFor="newPassword">
             New Password
           </label>
           <input
-            className="shadow appearance-none rounded w-full py-2 px-3 text-white bg-zinc-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none rounded xl:w-full py-2 px-3 text-white bg-zinc-700 leading-tight focus:outline-none focus:shadow-outline"
             id="newPassword"
             type="password"
             value={newPassword}
