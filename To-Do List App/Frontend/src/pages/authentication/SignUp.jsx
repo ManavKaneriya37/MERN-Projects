@@ -51,7 +51,7 @@ const SignUp = () => {
         {isLoading ? (
           <Loading loading={isLoading} />
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form autoComplete="off" onSubmit={handleSubmit}>
             <h2 className="text-2xl text-center tracking-wide font-bold mb-4">
               Sign Up
             </h2>
@@ -63,6 +63,7 @@ const SignUp = () => {
                 Full Name
               </label>
               <input
+                autoComplete="off"
                 className="shadow appearance-none text-white bg-neutral-800 border-[1px] border-zinc-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
@@ -80,6 +81,7 @@ const SignUp = () => {
               </label>
               <input
                 value={email}
+                autoComplete="off"
                 onChange={(e) => setEmail(e.target.value)}
                 className="shadow appearance-none text-white bg-neutral-800 border-[1px] border-zinc-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="email"
@@ -96,6 +98,7 @@ const SignUp = () => {
               </label>
               <input
                 value={password}
+                autoComplete="off"
                 onChange={(e) => setPassword(e.target.value)}
                 className="shadow appearance-none text-white bg-neutral-800 border-[1px] border-zinc-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="password"
@@ -112,6 +115,7 @@ const SignUp = () => {
               </label>
               <input
                 value={confirmPassword}
+                autoComplete="off"
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="shadow appearance-none text-white bg-neutral-800 border-[1px] border-zinc-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="confirmPassword"

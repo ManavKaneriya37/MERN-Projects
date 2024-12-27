@@ -50,6 +50,7 @@ const Login = () => {
               className="shadow appearance-none text-white bg-neutral-800 border-[1px] border-zinc-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
               type="email"
+              autoComplete="off"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -67,6 +68,7 @@ const Login = () => {
               className="shadow appearance-none text-white bg-neutral-800 border-[1px] border-zinc-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               placeholder="Password"
+              autoComplete="off"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
