@@ -19,6 +19,8 @@ module.exports.signUp = async (req, res) => {
             password: hashedPassword
         })
 
+        user.password = undefined;
+
         const token = await user.generateAuthToken();
         res.cookie('token', token);
 
@@ -38,7 +40,7 @@ module.exports.signIn = async (req, res) => {
 
         const {email, password} = req.body;
 
-        const user = await userModel.findOne({email});
+        const user = await userModel.findOne({email}).select('+password');
         if(!user) {
             return res.status(401).json({message: 'Invalid email or password'});
         }
@@ -47,6 +49,8 @@ module.exports.signIn = async (req, res) => {
         if(!isMatch) {
             return res.status(401).json({message: 'Invalid email or password'});
         }
+
+        user.password = undefined;
 
         const token = await user.generateAuthToken();
         res.cookie('token', token);
@@ -58,7 +62,16 @@ module.exports.signIn = async (req, res) => {
     }
 }
 
-module.exports.signOut = async (req, res) => {
+module.exports.profile = async (req, res) => {
+    try {
+        const user = req.user;
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+module.exports.logout = async (req, res) => {
     try {
         const token = req.cookies?.token || req.headers['authorization']?.split(' ')[1];
         if(!token) {

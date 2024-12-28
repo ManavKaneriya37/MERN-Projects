@@ -1,18 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import AllRoutes from "./routes/AllRoutes";
+import "./App.css";
+import UserContext from "../contexts/UserContext";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div className="">
-        <h1>App</h1>
-      </div>
+      <UserContext>
+        <AllRoutes />
+      </UserContext>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

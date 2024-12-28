@@ -1,17 +1,17 @@
 const jwt = require('jsonwebtoken');
 const redisClient = require('../services/redis.service');
 
-module.exports.authUser = (req, res, next) => {
+module.exports.authUser = async (req, res, next) => {
     try {
-        const token = req.cookies?.token || req.headers['authorization']?.split(' ')[1];
+        const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
         if (!token) {
             throw new Error('Unauthorized');
         }
 
-        const isBlackListed = redisClient.get(token);
+        const isBlackListed = await redisClient.get(token);
         if (isBlackListed) {
             res.clearCookie('token');
-            throw new Error('Unauthorized');
+            throw new Error('Unauthorized with blacklisted token');
         }
         
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

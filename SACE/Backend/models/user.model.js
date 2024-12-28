@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: [6, "Password must be at least 6 characters"],
+    select: false,
     /*validate: {
             validator: function(v) {
                 return /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/.test(v);
@@ -24,7 +25,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = async function() {
-  const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {expiresIn: '24h'});
+  const token = jwt.sign({ email: this.email }, process.env.JWT_SECRET, {expiresIn: '24h'});
   return token;
 }
 

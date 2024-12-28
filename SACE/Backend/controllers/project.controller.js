@@ -1,5 +1,6 @@
 const projectService = require('../services/project.service');
 const { validationResult } = require('express-validator');
+const userModel = require('../models/user.model'); 
 
 module.exports.createProject = async (req, res) => {
     try {
@@ -9,9 +10,10 @@ module.exports.createProject = async (req, res) => {
         }
 
         const {name} = req.body;
-        const userId = req.user._id;
+        const loggedInUser = await userModel.findOne({email: req.user.email});
+        const userId = loggedInUser._id.toString();
 
-        const project = await projectService.createProject({name, userId});
+        const project = await projectService.createProject(name,userId);
         return res.status(201).json(project);
 
     } catch (error) {
