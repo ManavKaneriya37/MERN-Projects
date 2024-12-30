@@ -25,3 +25,16 @@ module.exports.createProject = async (name, userId) => {
     throw new Error(error);
   }
 };
+
+module.exports.getAllProjectsByUserId = async (userId) => {
+  try {
+    if (!userId) {
+      throw new Error("Please provide a user id");
+    }
+
+    const usersProjects = await projectModel.find({ users: userId });
+    return usersProjects;
+  } catch (error) {
+    throw new Error(error);
+  }
+}

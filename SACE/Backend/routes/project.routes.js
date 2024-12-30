@@ -5,8 +5,14 @@ const {body} = require("express-validator");
 
 router.post("/create",
   authMiddleware.authUser,
-body('name').isString().withMessage('Name must be a string'),
+  body('name').isString().withMessage('Name must be a string'),
   projectController.createProject
 );
+
+router.post("/all",
+  authMiddleware.authUser,
+  projectController.getAllProjects
+);
+
 
 module.exports = router;

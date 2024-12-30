@@ -40,8 +40,6 @@ const SignIn = () => {
         setIsLoading(false);
         console.log(err);
       });
-
-    console.log(formData);
   };
 
   return (
