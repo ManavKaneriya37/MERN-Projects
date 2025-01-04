@@ -33,3 +33,33 @@ module.exports.getAllProjects = async (req, res) => {
         return res.status(400).json({ message: error.message });
     }
 }
+
+module.exports.addUserToProject = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty()) {
+            return res.status(400).json({ message: errors.array()[0].msg });
+        }
+
+        const {projectId, users} = req.body;
+
+        const loggedInUser = await userModel.findOne({email: req.user.email});
+
+        const project = await projectService.addUserToProject({projectId, users, userId: loggedInUser._id});
+
+        return res.status(200).json({project});
+    } catch (error) { 
+        console.log(error);
+        return res.status(400).json({ message: error.message });
+    }
+}
+
+module.exports.getProjectById = async (req, res) => {
+    try {
+        const {projectId} = req.params;
+        const project = await projectService.getProjectById(projectId);
+        return res.status(200).json(project);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}

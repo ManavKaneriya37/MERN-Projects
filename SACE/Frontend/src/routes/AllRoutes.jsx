@@ -4,6 +4,7 @@ import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
 import Home from "../pages/Home";
 import UserProtectedWrapper from "../components/UserProtectedWrapper";
+import Project from "../pages/Project";
 
 const AllRoutes = () => {
   return (
@@ -14,6 +15,14 @@ const AllRoutes = () => {
           element={
             <UserProtectedWrapper>
               <Home />
+            </UserProtectedWrapper>
+          }
+        />
+        <Route
+          path="/project/:projectId"
+          element={
+            <UserProtectedWrapper>
+              <Project />
             </UserProtectedWrapper>
           }
         />
