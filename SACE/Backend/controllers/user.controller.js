@@ -64,7 +64,7 @@ module.exports.signIn = async (req, res) => {
 
 module.exports.profile = async (req, res) => {
     try {
-        const user = req.user;
+        let user = await userModel.findOne({email: req.user.email}).select('-password');
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });

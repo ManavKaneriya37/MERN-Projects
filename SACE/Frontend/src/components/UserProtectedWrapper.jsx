@@ -23,10 +23,11 @@ const UserProtectedWrapper = ({ children }) => {
       )
       .then((res) => {
         if(res.status === 200) {
-            setUser(res.data);
+          setUser(res.data);
         }
       })
       .catch((err) => {
+        console.error(err);
         localStorage.removeItem('token');
         navigate("/login");
       });

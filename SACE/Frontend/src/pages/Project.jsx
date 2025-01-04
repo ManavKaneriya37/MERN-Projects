@@ -1,6 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  createRef,
+  useEffect,
+  useContext,
+} from "react";
 import { useLocation } from "react-router-dom";
 import axios from "../../config/axios";
+import { UserDataContext } from "../../contexts/UserContext";
+
+import {
+  initializeSocket,
+  receiveMessage,
+  sendMessage,
+} from "../../config/socket";
 
 const Project = () => {
   const location = useLocation();
@@ -12,25 +25,36 @@ const Project = () => {
   const [addColabModalOpen, setAddColabModalOpen] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState(new Set());
+  const [message, setMessage] = useState("");
+  const messageBox = createRef();
+
+  const { user } = useContext(UserDataContext);
 
   useEffect(() => {
-    axios.get(`/projects/${project._id}`, {    
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      setCurrentProject(res.data)
-    }
-    ).catch((err) => {
-      console.log(err.response.data);
+    initializeSocket(project._id);
+
+    receiveMessage("project-message", (data) => {
+      appendIncomingMessage(data);
+      console.log(data);
     });
-  }, [])
 
-  useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [chatEndRef]);
+    axios
+      .get(`/projects/${project._id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setCurrentProject(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }, []);
+
+  function scrollToBottom() {
+    messageBox.current.scrollTop = messageBox.current.scrollHeight;
+  }
 
   const handleGetCollabs = () => {
     setAddColabModalOpen(true);
@@ -80,6 +104,66 @@ const Project = () => {
       });
   };
 
+  const send = () => {
+    sendMessage("project-message", {
+      message,
+      sender: user,
+    });
+
+    appendOutgoingMessage({message, sender: user});
+
+    setMessage("");
+  };
+
+  function appendIncomingMessage(messageObj) {
+    const messageBox = document.querySelector(".conversation-area");
+    const message = document.createElement("div");
+
+    message.classList.add(
+      "message",
+      "w-52",
+      "p-1",
+      "my-1",
+      "bg-white/80",
+      "rounded",
+      "text-black",
+      "text-wrap",
+      "text-sm"
+    );
+    message.innerHTML = `<small className="text-[10px] text-gray-600">${messageObj.sender.email}</small>
+              <p className="text-sm text-black text-wrap">
+                ${messageObj.message}
+              </p>`;
+
+              messageBox.appendChild(message);
+              scrollToBottom();
+  }
+
+  function appendOutgoingMessage(messageObj) {
+    const messageBox = document.querySelector(".conversation-area");
+    const message = document.createElement("div");
+
+    message.classList.add(
+      "message",
+      "w-52",
+      "p-1",
+      "my-1",
+      "bg-white/80",
+      "rounded",
+      "text-black",
+      "text-wrap",
+      "text-sm",
+      "ml-auto",
+    );
+    message.innerHTML = `<small className="text-[10px] text-gray-600">${messageObj.sender.email}</small>
+              <p className="text-sm text-black text-wrap">
+                ${messageObj.message}
+              </p>`;
+
+              messageBox.appendChild(message);
+              scrollToBottom();
+  }
+
   return (
     <div className="min-h-screen w-full bg-zinc-900 text-white">
       <div className="flex justify-between h-full relative">
@@ -105,29 +189,18 @@ const Project = () => {
               </div>
             </div>
           </header>
-          <section className="conversation-area p-1">
-            <div className="message w-52 p-1 my-1 bg-white/80 rounded">
-              <h5 className="text-[10px] text-gray-600">test123@gmail.com</h5>
-              <p className="text-sm text-black text-wrap">
-                Hello, welcome to this Project!
-              </p>
-            </div>
-            <div className="message ml-auto w-52 p-1 my-1 bg-white/80 rounded">
-              <h5 className="text-[10px] text-gray-600">manavnk37@gmail.com</h5>
-              <p className="text-sm text-black text-wrap">
-                Thank you admin for inviting in this project.
-              </p>
-            </div>
-            <div ref={chatEndRef}></div>
+          <section ref={messageBox} className="conversation-area p-1">
           </section>
           <div className="input w-full p-2 flex gap-1 bg-transparent">
             <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter message"
               type="text"
               name="message"
               className="w-full text-sm border-[1px] border-zinc-400/50 bg-zinc-300 rounded outline-none p-[7px] text-black"
             />
-            <button>
+            <button onClick={send}>
               <i className="ri-send-plane-fill bg-zinc-800 p-2 rounded hover:bg-zinc-900 ease-in duration-100"></i>
             </button>
           </div>
@@ -146,15 +219,17 @@ const Project = () => {
               ></i>
             </header>
             <div className="text-black p-2 px-3 flex flex-col gap-2 items-center">
-             {
-                currentProject?.users.map((user, index) => {
-                  return (
-                    <div key={index} className="flex items-center gap-4 w-full bg-gray-200 p-2 rounded hover:bg-gray-600 duration-75 ease cursor-pointer">
-                <i className="ri-user-6-line"></i>
-                <h3>{user.email}</h3>
-                </div>
-                  )})
-              }
+              {currentProject?.users.map((user, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 w-full bg-gray-200 p-2 rounded hover:bg-gray-600 duration-75 ease cursor-pointer"
+                  >
+                    <i className="ri-user-6-line"></i>
+                    <h3>{user.email}</h3>
+                  </div>
+                );
+              })}
             </div>
           </aside>
         </div>
