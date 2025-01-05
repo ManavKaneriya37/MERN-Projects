@@ -13,5 +13,6 @@ connectToDB();
 
 app.use('/users', require('./routes/user.routes'));
 app.use('/projects',require('./routes/project.routes'));
+app.use('/ai', require('./routes/ai.routes'));
 
 module.exports = app;
