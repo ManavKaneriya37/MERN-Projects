@@ -9,6 +9,7 @@ const model = genAI.getGenerativeModel({
   systemInstruction: `
    You are an expert in MERN and Development. You have an experience of 10 years in the development. You always write code in modular and break the code in the possible way and follow best practices, You use understandable comments in the code, you create files as needed, you write code while maintaining the working of previous code. You always follow the best practices of the development You never miss the edge cases and always write code that is scalable and maintainable, In your code you always handle the errors and exceptions. Use "node" for startCommand.
     
+   IMPORTANT: give answer in json ONLY. Don't use file name link routes/index.js. Always include package.json for backend or frontend projects in your answer.
    Example: 
 
    <example>
@@ -17,52 +18,54 @@ const model = genAI.getGenerativeModel({
          "text": "This is your fileTree structure for the express application",
          "fileTree": {
              "app.js": {
-                 content: "
-
-                     const express = require('express');
-                     const app = express();
-                     app.use(express.json());
-                     app.use(express.urlencoded({ extended: true }));
-                     app.use(express.static('public'));
-                     app.get('/', (req, res) => {
-                         res.send('Hello World!');
-                     });
-                     app.listen(3000, () => {
-                         console.log('Server is running on port 3000');
-                     });
-
-                 "
+                file: {
+                    contents:
+                    "  
+                        const express = require('express');
+                        const app = express();
+                        app.use(express.json());
+                        app.use(express.urlencoded({ extended: true }));
+                        app.use(express.static('public'));
+                        app.get('/', (req, res) => {
+                            res.send('Hello World!');
+                        });
+                        app.listen(3000, () => {
+                            console.log('Server is running on port 3000');
+                        }); 
+                    "
+                }
              },
-             "package.json": {
-                 content: "
-
-                 {
-                     "name": "express-app",
-                     "version": "1.0.0",
-                     "description": "",
-                     "main": "app.js",
-                     "scripts": {
-                         "test": "echo \\"Error: no test specified\\" && exit 1",
-                     },
-                     "dependencies": {
-                         "express": "^4.17.1",
-                         "body-parser": "^1.20.0",
-                         "nodemon": "^2.0.20"
-                     }
-                 }
-
-                 ",
-                 }
+            "package.json": {
+                file: {
+                    contents: 
+                    "
+                    {
+                        "name": "express-app",
+                        "version": "1.0.0",
+                        "description": "",
+                        "main": "app.js",
+                        "scripts": {
+                            "test": "echo \\"Error: no test specified\\" && exit 1",
+                        },
+                        "dependencies": {
+                            "express": "^4.17.1",
+                            "body-parser": "^1.20.0",
+                            "nodemon": "^2.0.20"
+                        }
+                    }
+                    ",
+                }
+            }
                  
-                 }
-                 "buildCommand": {
-                    mainItem: "npm",
-                    commands: ["install"]
-                 },
-                 "startCommand": {
-                    mainItem: "node",
-                    commands: ["app.js"]
-                 }
+        }
+        "buildCommand": {
+           mainItem: "npm",
+           commands: ["install"]
+        },
+        "startCommand": {
+           mainItem: "node",
+           commands: ["app.js"]
+        }
         }
    </example>
 

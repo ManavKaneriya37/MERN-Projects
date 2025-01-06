@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import axios from "../../config/axios";
 import { UserDataContext } from "../../contexts/UserContext";
 import Markdown from "markdown-to-jsx";
+import { getWebContainer } from "../../config/webContainers";
 
 import {
   initializeSocket,
@@ -32,18 +33,32 @@ const Project = () => {
   const [currentFile, setCurrentFile] = useState(null);
   const [openFiles, setOpenFiles] = useState([]);
   const messageBox = createRef();
+  const [webContainer, setWebContainer] = useState(null);
+  const [iframeUrl, setIframeUrl] = useState(null);
+  const [runProcess, setRunProcess] = useState(null);
 
   const { user } = useContext(UserDataContext);
 
   useEffect(() => {
     initializeSocket(project._id);
 
-    receiveMessage("project-message", (data) => {
-      const message = JSON.parse(data.message)
+    if (!webContainer) {
+      getWebContainer().then((container) => {
+        setWebContainer(container);
+        console.log("container started");
+      });
+    }
 
-      if(message.fileTree) {
+    receiveMessage("project-message", (data) => {
+      const message = JSON.parse(data.message);
+      console.log(message);
+
+      webContainer?.mount(message.fileTree);
+
+      if (message.fileTree) {
         setFileTree(message.fileTree);
       }
+
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -55,6 +70,7 @@ const Project = () => {
       })
       .then((res) => {
         setCurrentProject(res.data);
+        setFileTree(res.data.fileTree)
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -133,7 +149,22 @@ const Project = () => {
     );
   }
 
-  console.log(currentFile)
+  function saveFileTree(ft) {
+    console.log(ft);
+    axios.put('/projects/update-file-tree', { projectId: project._id, fileTree: fileTree }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+    }).then(res => {
+      console.log(res.data);
+    }).catch(err => {
+      console.log(err.response.data);
+    })
+  }
+
+  // useEffect(() => {
+  //   saveFileTree(fileTree);
+  // }, [fileTree])
 
   return (
     <div className="min-h-screen w-full bg-zinc-900 text-white">
@@ -238,33 +269,102 @@ const Project = () => {
               </div>
             ))}
           </div>
-          {currentFile && (
-            <div className="code-editor h-full flex flex-col flex-grow bg-neutral-800 ">
-              <div className="top flex items-center">
+          <div className="code-editor h-full flex flex-col flex-grow bg-neutral-800 ">
+            <div className="top flex items-center">
+              <div className="files flex items-center w-full">
                 {Array.from(openFiles).map((file, index) => (
-                  <div onClick={() => setCurrentFile(file)} key={index} className={`${file === currentFile ? 'bg-slate-400': ''} cursor-pointer flex justify-between items-center p-1 w-fit bg-gray-200 text-black`}>
+                  <div
+                    onClick={() => setCurrentFile(file)}
+                    key={index}
+                    className={`${
+                      file === currentFile ? "bg-slate-400" : ""
+                    } cursor-pointer flex justify-between items-center p-1 w-fit bg-gray-200 text-black`}
+                  >
                     <h1 className="p-2 text-base font-bold">{file}</h1>
                   </div>
                 ))}
               </div>
-              <div className="bottom flex flex-grow bg-gray-950 h-full">
-                {fileTree[currentFile] && (
-                  <textarea
-                    value={fileTree[currentFile].content}
-                    onChange={(e) => {
-                      setFileTree({
-                        ...fileTree,
-                        [currentFile]: {
-                          content: e.target.value,
+              <div className="actions flex items-center gap-1">
+                <button
+                  onClick={async () => {           
+                    await webContainer?.mount(fileTree);
+                    const installProcess = await webContainer.spawn("npm", [
+                      "install",
+                    ]);
+                    installProcess.output.pipeTo(
+                      new WritableStream({
+                        write(chunk) {
+                          console.log(chunk);
                         },
-                      });
-                    }}
-                    className="code bg-transparent h-full w-full overflow-y-auto p-2"
-                  ></textarea>
-                )}
+                      })
+                    );
+
+                    console.log("install process done");
+
+                    if(runProcess) {
+                      runProcess.kill();
+                    }
+
+                    let tempRunProcess = await webContainer.spawn("npm", [
+                      "start",
+                    ]);
+                    tempRunProcess.output.pipeTo(
+                      new WritableStream({
+                        write(chunk) {
+                          console.log(chunk);
+                        },
+                      })
+                    );
+
+                    setRunProcess(tempRunProcess);
+
+                    webContainer.on('server-ready', (port, url) => {
+                      console.log(port, url);
+                      setIframeUrl(url)
+                    })
+                  }}
+                  className="p-2 px-4 bg-slate-300 text-black"
+                >
+                  RUN
+                </button>
+                <button className="save bg-slate-700 text-white p-2 px-4 rounded-md" onClick={async() =>{
+                   saveFileTree(fileTree)
+                   await webContainer?.mount(fileTree);
+                }}>Save</button>
               </div>
             </div>
-          )}
+            <div className="bottom flex flex-grow bg-gray-950 h-full text-sm">
+              {fileTree[currentFile] && (
+                <textarea
+                  value={fileTree[currentFile].file.contents}
+                  onChange={(e) => {
+                    const updatedContent = e.target.value;
+                    const ft = {
+                      ...fileTree,
+                      [currentFile]: {
+                        file: {
+                          contents: updatedContent,
+                        }
+                    }
+                  }
+
+                  setFileTree(ft);
+                  saveFileTree(ft);
+                  
+                  }}
+                  className="code bg-transparent h-full w-full overflow-y-auto p-2"
+                ></textarea>
+              )}
+            </div>
+          </div>
+          {iframeUrl && webContainer && 
+            <div className="flex flex-col">
+              <div className="address-bar">
+                <input value={iframeUrl} onChange={e => setIframeUrl(e.target.value)} className="w-full bg-slate-700 rounded p-1 px-2" />
+              </div>
+              <iframe  src={iframeUrl} className="bg-white w-[25vw] h-full"></iframe>
+            </div>
+          }
         </section>
         <div
           className={`${

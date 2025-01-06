@@ -38,8 +38,8 @@ module.exports.getAllProjectsByUserId = async (userId) => {
   } catch (error) {
     throw new Error(error);
   }
-}
-module.exports.addUserToProject = async ({projectId, users, userId}) => {
+};
+module.exports.addUserToProject = async ({ projectId, users, userId }) => {
   try {
     if (!projectId) {
       throw new Error("Please provide a project id");
@@ -57,10 +57,10 @@ module.exports.addUserToProject = async ({projectId, users, userId}) => {
       }
     }
 
-    if(!userId) {
+    if (!userId) {
       throw new Error("Please provide a user id");
     }
-    if(!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new Error("Invalid user id");
     }
 
@@ -73,21 +73,27 @@ module.exports.addUserToProject = async ({projectId, users, userId}) => {
       throw new Error("Project not found");
     }
 
-    const updatedProject = await projectModel.findOneAndUpdate({
-      _id: projectId,
-    }, {
-      $addToSet:{
-        users: {
-          $each: users
-        }
-      }
-    }, {new: true}).populate('users');
+    const updatedProject = await projectModel
+      .findOneAndUpdate(
+        {
+          _id: projectId,
+        },
+        {
+          $addToSet: {
+            users: {
+              $each: users,
+            },
+          },
+        },
+        { new: true }
+      )
+      .populate("users");
 
     return updatedProject;
   } catch (error) {
     throw new Error(error);
   }
-}
+};
 
 module.exports.getProjectById = async (projectId) => {
   try {
@@ -98,9 +104,11 @@ module.exports.getProjectById = async (projectId) => {
       throw new Error("Invalid project id");
     }
 
-    const project = await projectModel.findOne({
-      _id: projectId,
-    }).populate('users');
+    const project = await projectModel
+      .findOne({
+        _id: projectId,
+      })
+      .populate("users");
 
     if (!project) {
       throw new Error("Project not found");
@@ -110,4 +118,30 @@ module.exports.getProjectById = async (projectId) => {
   } catch (error) {
     throw new Error(error);
   }
-}
+};
+
+module.exports.updateFileTree = async ({ projectId, fileTree }) => {
+  try {
+    if (!projectId) {
+      throw new Error("Please provide a project id");
+    }
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      throw new Error("Invalid project id");
+    }
+    if (!fileTree) {
+      throw new Error("Please provide a file tree");
+    }
+    const updatedProject = await projectModel.updateOne(
+      {
+        _id: projectId,
+      },{
+        fileTree,
+      },{
+        new: true,
+      }
+    );
+    return updatedProject;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
