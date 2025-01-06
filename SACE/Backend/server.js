@@ -44,7 +44,6 @@ io.use(async (socket, next) => {
 
 io.on("connection", (socket) => {
   const roomId = socket.project._id.toString();
-  console.log("a user connected");
 
   socket.join(roomId);
 
@@ -69,7 +68,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("a user disconnected");
     socket.leave(socket.roomId);
   });
 });

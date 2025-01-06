@@ -50,16 +50,18 @@ const Project = () => {
     }
 
     receiveMessage("project-message", (data) => {
-      const message = JSON.parse(data.message);
-      console.log(message);
 
-      webContainer?.mount(message.fileTree);
+      if (data.sender._id == "ai") {
+        const message = JSON.parse(data.message);
+        webContainer?.mount(message.fileTree);
 
-      if (message.fileTree) {
-        setFileTree(message.fileTree);
+        if (message.fileTree) {
+          setFileTree(message.fileTree || {});
+        }
+        setMessages((prevMessages) => [...prevMessages, data]);
+      } else {
+        setMessages((prevMessages) => [...prevMessages, data]);
       }
-
-      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
     axios
@@ -70,7 +72,7 @@ const Project = () => {
       })
       .then((res) => {
         setCurrentProject(res.data);
-        setFileTree(res.data.fileTree)
+        setFileTree(res.data.fileTree);
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -78,8 +80,11 @@ const Project = () => {
   }, []);
 
   function scrollToBottom() {
-    messageBox.current.scrollTop = messageBox.current?.scrollHeight;
+    messageBox.current.scrollTop = messageBox.current.scrollHeight;
   }
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleGetCollabs = () => {
     setAddColabModalOpen(true);
@@ -151,24 +156,27 @@ const Project = () => {
 
   function saveFileTree(ft) {
     console.log(ft);
-    axios.put('/projects/update-file-tree', { projectId: project._id, fileTree: fileTree }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-    }).then(res => {
-      console.log(res.data);
-    }).catch(err => {
-      console.log(err.response.data);
-    })
+    axios
+      .put(
+        "/projects/update-file-tree",
+        { projectId: project._id, fileTree: fileTree },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   }
-
-  // useEffect(() => {
-  //   saveFileTree(fileTree);
-  // }, [fileTree])
 
   return (
     <div className="min-h-screen w-full bg-zinc-900 text-white">
-      <div className="flex items-center h-full relative">
+      <div className="flex items-center gap-1 h-full relative">
         <div className="left w-[25vw] max-h-fit h-screen relative bg-zinc-500 flex flex-col justify-between">
           <header className="w-full bg-zinc-200 bg-opacity-80 text-black h-fit p-[6px] flex items-center justify-between px-5">
             <div className="flex justify-between w-full gap-1 items-center">
@@ -202,7 +210,7 @@ const Project = () => {
                 <small className="text-[10px] text-gray-600">
                   {msg.sender.email}
                 </small>
-                <p className="text-sm text-black text-wrap break-words">
+                <p className="text-xs text-black text-wrap break-words">
                   {msg.sender._id === "ai"
                     ? writeAIMessage(msg.message)
                     : msg.message}
@@ -238,7 +246,7 @@ const Project = () => {
               ></i>
             </header>
             <div className="text-black p-2 px-3 flex flex-col gap-2 items-center">
-              {currentProject?.users.map((user, index) => {
+              {currentProject?.users?.map((user, index) => {
                 return (
                   <div
                     key={index}
@@ -253,7 +261,7 @@ const Project = () => {
           </aside>
         </div>
         <section className="right flex flex-grow h-screen bg-zinc-700">
-          <div className="explorer h-full flex-grow min-w-52 max-w-64 bg-zinc-600/50">
+          <div className="explorer h-full flex-grow min-w-52 max-w-64 bg-slate-600/50">
             {Object.keys(fileTree).map((file, index) => (
               <div
                 onClick={() => {
@@ -263,30 +271,30 @@ const Project = () => {
                   );
                 }}
                 key={index}
-                className="tree-element cursor-pointer w-full bg-zinc-500 hover:bg-zinc-500/80 duration-75 ease"
+                className="tree-element cursor-pointer w-full bg-slate-600 hover:bg-zinc-500/80 duration-75 ease"
               >
-                <p className="p-2 font-semibold">{file}</p>
+                <p className="p-2 font-semibold text-sm">{file}</p>
               </div>
             ))}
           </div>
           <div className="code-editor h-full flex flex-col flex-grow bg-neutral-800 ">
             <div className="top flex items-center">
-              <div className="files flex items-center w-full">
+              <div className="files flex items-center w-full overflow-hidden overflow-x-auto">
                 {Array.from(openFiles).map((file, index) => (
                   <div
                     onClick={() => setCurrentFile(file)}
                     key={index}
                     className={`${
-                      file === currentFile ? "bg-slate-400" : ""
-                    } cursor-pointer flex justify-between items-center p-1 w-fit bg-gray-200 text-black`}
+                      file === currentFile ? "bg-white" : "bg-gray-400"
+                    } cursor-pointer flex justify-between items-center p-1 w-fit text-black`}
                   >
-                    <h1 className="p-2 text-base font-bold">{file}</h1>
+                    <h1 className="p-2 text-xs font-bold">{file}</h1>
                   </div>
                 ))}
               </div>
               <div className="actions flex items-center gap-1">
                 <button
-                  onClick={async () => {           
+                  onClick={async () => {
                     await webContainer?.mount(fileTree);
                     const installProcess = await webContainer.spawn("npm", [
                       "install",
@@ -297,11 +305,9 @@ const Project = () => {
                           console.log(chunk);
                         },
                       })
-                    );
+                    );                    
 
-                    console.log("install process done");
-
-                    if(runProcess) {
+                    if (runProcess) {
                       runProcess.kill();
                     }
 
@@ -318,24 +324,30 @@ const Project = () => {
 
                     setRunProcess(tempRunProcess);
 
-                    webContainer.on('server-ready', (port, url) => {
+                    webContainer.on("server-ready", (port, url) => {
                       console.log(port, url);
-                      setIframeUrl(url)
-                    })
+                      setIframeUrl(url);
+                    });
                   }}
-                  className="p-2 px-4 bg-slate-300 text-black"
+                  className="p-2 px-4 text-xs bg-slate-300 text-black rounded-md hover:bg-slate-400 ease duration-100"
                 >
                   RUN
                 </button>
-                <button className="save bg-slate-700 text-white p-2 px-4 rounded-md" onClick={async() =>{
-                   saveFileTree(fileTree)
-                   await webContainer?.mount(fileTree);
-                }}>Save</button>
+                <button
+                  className="save bg-slate-700 text-whit text-xs my-1 p-2 px-4 rounded-md hover:bg-slate-600 ease duration-100"
+                  onClick={async () => {
+                    saveFileTree(fileTree);
+                    await webContainer?.mount(fileTree);
+                  }}
+                >
+                  Save
+                </button>
               </div>
             </div>
-            <div className="bottom flex flex-grow bg-gray-950 h-full text-sm">
+            <div className="bottom flex flex-grow bg-neutral-950 h-full text-sm">
               {fileTree[currentFile] && (
                 <textarea
+                  spellCheck='false'
                   value={fileTree[currentFile].file.contents}
                   onChange={(e) => {
                     const updatedContent = e.target.value;
@@ -344,27 +356,33 @@ const Project = () => {
                       [currentFile]: {
                         file: {
                           contents: updatedContent,
-                        }
-                    }
-                  }
+                        },
+                      },
+                    };
 
-                  setFileTree(ft);
-                  saveFileTree(ft);
-                  
+                    setFileTree(ft);
+                    saveFileTree(ft);
                   }}
                   className="code bg-transparent h-full w-full overflow-y-auto p-2"
                 ></textarea>
               )}
             </div>
           </div>
-          {iframeUrl && webContainer && 
+          {iframeUrl && webContainer && (
             <div className="flex flex-col">
               <div className="address-bar">
-                <input value={iframeUrl} onChange={e => setIframeUrl(e.target.value)} className="w-full bg-slate-700 rounded p-1 px-2" />
+                <input
+                  value={iframeUrl}x
+                  onChange={(e) => setIframeUrl(e.target.value)}
+                  className="w-full bg-slate-700 rounded p-1 px-2 text-[8px] z-[9] block relative mt-1"
+                />
               </div>
-              <iframe  src={iframeUrl} className="bg-white w-[25vw] h-full"></iframe>
+              <iframe
+                src={iframeUrl}
+                className="bg-white w-[25vw] h-full"
+              ></iframe>
             </div>
-          }
+          )}
         </section>
         <div
           className={`${
