@@ -1,0 +1,28 @@
+{
+  "name": "expense_tracker",
+  "version": "1.0.0",
+  "description": "The application that can track your expenses",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManavKaneriya37/MERN-Projects.git"
+  },
+  "keywords": [
+    "Expense-tracker",
+    "MERN"
+  ],
+  "author": "Manav N Kaneriya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ManavKaneriya37/MERN-Projects/issues"
+  },
+  "homepage": "https://github.com/ManavKaneriya37/MERN-Projects#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
