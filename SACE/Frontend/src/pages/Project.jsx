@@ -51,6 +51,8 @@ const Project = () => {
 
     receiveMessage("project-message", (data) => {
 
+      console.log(data);
+
       if (data.sender._id == "ai") {
         const message = JSON.parse(data.message);
         webContainer?.mount(message.fileTree);
@@ -174,6 +176,8 @@ const Project = () => {
       });
   }
 
+  
+
   return (
     <div className="min-h-screen w-full bg-zinc-900 text-white">
       <div className="flex items-center gap-1 h-full relative">
@@ -220,9 +224,15 @@ const Project = () => {
           </section>
           <div className="input w-full p-2 flex gap-1 bg-transparent">
             <input
+              autoComplete="off"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter message"
+              onKeyPress={e => {
+                if(e.key === 'Enter') {
+                  send();
+                }
+              }}
               type="text"
               name="message"
               className="w-full text-sm border-[1px] border-zinc-400/50 bg-zinc-300 rounded outline-none p-[7px] text-black"
@@ -262,7 +272,7 @@ const Project = () => {
         </div>
         <section className="right flex flex-grow h-screen bg-zinc-700">
           <div className="explorer h-full flex-grow min-w-52 max-w-64 bg-slate-600/50">
-            {Object.keys(fileTree).map((file, index) => (
+            {fileTree && Object.keys(fileTree).map((file, index) => (
               <div
                 onClick={() => {
                   setCurrentFile(file);
@@ -345,7 +355,7 @@ const Project = () => {
               </div>
             </div>
             <div className="bottom flex flex-grow bg-neutral-950 h-full text-sm">
-              {fileTree[currentFile] && (
+              {fileTree && fileTree[currentFile] && (
                 <textarea
                   spellCheck='false'
                   value={fileTree[currentFile].file.contents}

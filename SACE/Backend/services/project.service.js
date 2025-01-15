@@ -14,6 +14,7 @@ module.exports.createProject = async (name, userId) => {
       const project = await projectModel.create({
         name,
         users: [userId],
+        fileTree: {},
       });
       return project;
     } catch (error) {
