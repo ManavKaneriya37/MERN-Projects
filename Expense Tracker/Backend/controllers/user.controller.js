@@ -2,6 +2,7 @@ import {asyncHandler} from '../utils/asyncHandler.js'
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
 import UserModel from '../models/user.model.js'
+import redisClient from '../utils/redisClient.js'
 
 const registerUser = asyncHandler(async (req, res) => {
     const {name, email, password} =  req.body;
@@ -85,4 +86,24 @@ const getCurrentUser = asyncHandler((req, res) => {
     )
 }) 
 
-export {registerUser, loginUser, getCurrentUser};
+const logoutUser = asyncHandler(async(req, res) => {
+    try {
+        const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
+        if(!token) {
+            throw new ApiError(401, "Unauthorized with no token");
+        }
+
+        redisClient.set(token, "logout", "EX", 3600*24);
+
+        res.clearCookie("token");
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, null, "User logged out successfully")
+        )
+
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong with logout")
+    }
+})
+export {registerUser, loginUser, getCurrentUser, logoutUser};
