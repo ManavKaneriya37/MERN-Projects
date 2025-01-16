@@ -37,10 +37,52 @@ const registerUser = asyncHandler(async (req, res) => {
         secure: true
     })
 
-    return res.status(201).json(
+    return res
+    .status(201)
+    .json(
         new ApiResponse(200, {createdUser, token}, "User registered successfully")
     )
 })
 
+const loginUser = asyncHandler(async (req, res) => {
+        const {email, password} = req.body;
+        if(
+            [email, password].some(field => field?.trim() === '')
+        ) {
+            throw new ApiError(400, "All fields are required");
+        }
 
-export {registerUser};
+        const user = await UserModel.findOne({email});
+        if(!user) {
+            throw new  ApiError(409, "Something went wrong");
+        }
+
+        const isValidPassword = await user.comparePassword(password);
+
+        if(!isValidPassword) {
+            throw new ApiError(401, "Authentication failed.");
+        }
+
+        const token = await user.generateAuthToken();
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true
+        });
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {user, token}, "User logged in successfully")
+        )
+
+})
+
+const getCurrentUser = asyncHandler((req, res) => {
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, req.user, "User profile retrieved successfully")
+    )
+}) 
+
+export {registerUser, loginUser, getCurrentUser};

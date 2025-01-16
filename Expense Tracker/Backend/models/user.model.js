@@ -27,7 +27,8 @@ userSchema.statics.hashPassword = async function(password) {
 }
 
 userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    const user = await this.model('User').findById(this._id).select('password');
+    return await bcrypt.compare(password, user.password);
 }
 
 userSchema.methods.generateAuthToken = async function() {
