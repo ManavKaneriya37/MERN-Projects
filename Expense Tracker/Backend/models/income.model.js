@@ -18,6 +18,10 @@ const incomeSchema = mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
     }
 }, {timestamps: true});
 
