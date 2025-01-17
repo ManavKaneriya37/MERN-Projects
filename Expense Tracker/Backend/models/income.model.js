@@ -13,6 +13,11 @@ const incomeSchema = mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now,
+    },
+    category: {
+        type: String,
+        required: true,
+        trim: true
     }
 }, {timestamps: true});
 

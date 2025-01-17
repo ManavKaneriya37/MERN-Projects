@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const expenseModel = mongoose.Schema({
     tag:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     },
     amount:{
         type:Number,
@@ -13,6 +14,11 @@ const expenseModel = mongoose.Schema({
         type:Date,
         required:true,
         default:Date.now,
+    },
+    category: {
+        type: String,
+        required: true,
+        trim: true
     }
 }, {timestamps: true})
 

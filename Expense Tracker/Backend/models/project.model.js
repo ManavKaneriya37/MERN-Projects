@@ -7,6 +7,7 @@ const projectSchema = mongoose.Schema({
     }, 
     description: {
         type: String,
+        default: "",
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

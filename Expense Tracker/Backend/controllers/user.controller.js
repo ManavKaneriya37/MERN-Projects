@@ -106,4 +106,10 @@ const logoutUser = asyncHandler(async(req, res) => {
         throw new ApiError(500, "Something went wrong with logout")
     }
 })
-export {registerUser, loginUser, getCurrentUser, logoutUser};
+
+export {
+    registerUser, 
+    loginUser, 
+    getCurrentUser, 
+    logoutUser
+};
