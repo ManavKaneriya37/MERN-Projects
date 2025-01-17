@@ -1,5 +1,10 @@
 import {Router} from 'express'
-import {createProject, updateProject, deleteProject, getAllProjects} from '../controllers/project.controllers.js'
+import {
+    createProject, 
+    updateProject, 
+    deleteProject, 
+    getAllProjects
+} from '../controllers/project.controllers.js'
 import {verifyUser} from '../middlewares/auth.middleware.js'
 
 const router = Router();

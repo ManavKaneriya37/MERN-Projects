@@ -29,6 +29,12 @@ const createProject = asyncHandler(async (req, res) => {
             budget
         })
 
+        await UserModel.findByIdAndUpdate(req.user._id, {
+            $push: {
+                projects: project._id
+            }
+        })
+
         if(!project) {
             throw new ApiError(500, "Something went wrong with creating project")
         }
