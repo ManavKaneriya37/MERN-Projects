@@ -123,4 +123,29 @@ const getExpensesTotal = asyncHandler(async (req, res) => {
   }
 });
 
-export { createExpense, deleteExpense, getExpensesTotal };
+const getExpenses = asyncHandler(async (req, res) => {
+    try {
+        const { projectId } = req.body;
+        if (projectId) {
+            if(!mongoose.Types.ObjectId.isValid(projectId)) {
+                throw new ApiError(403, "Project Id is not in valid format");
+            }
+            const expenses = await ExpenseModel.find({ project: new mongoose.Types.ObjectId(projectId) });
+            return res
+            .status(200)
+            .json(new ApiResponse(200, expenses, "Expenses for the project"));
+        } else {
+            const expenses = await ExpenseModel.find({
+                project: { $exists: false }
+            })
+
+            return res
+            .status(200)
+            .json(new ApiResponse(200, expenses, "General expenses"));
+        }
+    } catch (error) {
+        throw new ApiError(500, error.message);
+    }
+})
+
+export { createExpense, deleteExpense, getExpensesTotal, getExpenses };

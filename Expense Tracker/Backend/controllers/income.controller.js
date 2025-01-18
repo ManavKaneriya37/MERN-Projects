@@ -129,8 +129,31 @@ const getIncomesTotal = asyncHandler(async (req, res) => {
     }
 })
 
+const getIncomes = asyncHandler(async (req, res) => {
+    try {
+        const {projectId} = req.body;
+        if(projectId) {
+            if(!mongoose.Types.ObjectId.isValid(projectId)) {
+                throw new ApiError(403, "Invalid project id")
+            }
+            const incomes = await IncomeModel.find({project: new mongoose.Types.ObjectId(projectId)}).sort({date: 1})
+            return res
+            .status(200)
+            .json(new ApiResponse(200, incomes, "Project Incomes"))
+        } else {
+            const incomes = await IncomeModel.find({project: { $exists: false }}).sort({date: 1})
+            return res
+            .status(200)
+            .json(new ApiResponse(200, incomes, "General Incomes"))
+        }
+    } catch (error) {
+        throw new ApiError(500, error.message)
+    }
+})
+
 export {
     createIncome,
     deleteIncome,
     getIncomesTotal,
+    getIncomes
 }
