@@ -26,10 +26,10 @@ app.use(express.urlencoded({extended: true}))
 app.use(cookieParser());
 
 
-app.use('/users', userRoutes);
-app.use('/projects', projectRoutes);
-app.use('/expenses', expenseRoutes);
-app.use('/incomes', incomeRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/incomes', incomeRoutes);
 
 
 export default app;
