@@ -75,7 +75,62 @@ const deleteIncome = asyncHandler(async (req, res) => {
     }
 });
 
+const getIncomesTotal = asyncHandler(async (req, res) => {
+    try {
+        const {projectId} = req.body;
+
+        if(projectId) {
+            if(!mongoose.Types.ObjectId.isValid(projectId)) {
+                throw new ApiError(403, "Project Id is not in valid format")
+            }
+
+            const total = await IncomeModel.aggregate([
+                {
+                    $match: {
+                        project: new mongoose.Types.ObjectId(projectId)
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$amount" }
+                    }
+                }
+            ])
+
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(200, total[0].total, "Total income")
+            )
+        } else {
+            const total = await IncomeModel.aggregate([
+                {
+                    $match: {
+                        project: { $exists: false }
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$amount" }
+                    }
+                }
+            ])
+
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(200, total[0].total, "Total income")
+            )
+        }
+    } catch (error) {
+        throw new ApiError(500, error.message)
+    }
+})
+
 export {
     createIncome,
-    deleteIncome
+    deleteIncome,
+    getIncomesTotal,
 }
