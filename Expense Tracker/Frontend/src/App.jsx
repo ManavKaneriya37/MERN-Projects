@@ -1,13 +1,16 @@
 import {BrowserRouter} from 'react-router-dom'
 import MainRoutes from './routes/MainRoutes'
+import UserContext from './contexts/UserContext'
 
 function App() {
   
   return (
     <>
-    <BrowserRouter>
-      <MainRoutes />
-    </BrowserRouter>
+    <UserContext>
+      <BrowserRouter>
+        <MainRoutes />
+      </BrowserRouter>
+    </UserContext>
     </>
   )
 }

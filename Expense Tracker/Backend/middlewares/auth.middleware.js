@@ -7,6 +7,7 @@ import redisClient from '../utils/redisClient.js'
 export const verifyUser = asyncHandler(async (req, res, next) => {
     try {
         const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
+
         if(!token) {
             throw new ApiError(401, 'Unauthorized reqest');
         }
@@ -18,15 +19,17 @@ export const verifyUser = asyncHandler(async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
         const user = await UserModel.findById(decoded._id);
         if(!user) {
             throw new ApiError(401, 'Invalid token');
+            process.exit(1);
         }
 
         req.user = user;
         next();
 
     } catch (error) {
-        throw new ApiError(409, "Something went wrong")
+        throw new ApiError(409, error.message)
     }
 })

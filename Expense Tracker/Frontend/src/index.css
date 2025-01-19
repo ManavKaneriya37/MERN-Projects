@@ -12,3 +12,6 @@ html,body {
     height: 100%;
     width: 100%;
 }
+.registerTitle, .registerP {
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.050);
+}
