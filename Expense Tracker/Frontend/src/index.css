@@ -24,7 +24,7 @@ html,body {
     border-radius: 1rem;
     box-shadow: 1px 1px 3px 0 rgb(0 0 0 / 0.1), 1px 1px 2px -1px rgb(0 0 0 / 0.1);
 }
-.homeDashboard {
-    background-color: #eae9e9;
+.home {
+    background-color: #fff;
     border-radius: 1rem;
 }
