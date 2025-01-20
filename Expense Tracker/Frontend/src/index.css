@@ -15,3 +15,16 @@ html,body {
 .registerTitle, .registerP {
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.050);
 }
+.HomeContainer {
+    background: linear-gradient(120deg,#dcdcdc,rgb(112, 228, 162), rgb(29, 211, 108));
+}
+.homeMenuDriven {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    box-shadow: 1px 1px 3px 0 rgb(0 0 0 / 0.1), 1px 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+.homeDashboard {
+    background-color: #eae9e9;
+    border-radius: 1rem;
+}
