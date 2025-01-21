@@ -115,6 +115,7 @@ const getAllProjects = asyncHandler(async (req, res) => {
         if(!req.user?._id) {
             throw new ApiError(401, "Unauthorized access");
         }
+        // const projects = await ProjectModel.find({user: req.user._id}).populate("user");
 
         const projects = await ProjectModel.find({user: req.user._id});
 
@@ -128,9 +129,33 @@ const getAllProjects = asyncHandler(async (req, res) => {
     }
 })
 
+const getSingleProject = asyncHandler(async (req, res) => {
+    try {
+        const {projectId} = req.params;
+        if(!projectId) {
+            throw new ApiError(400, "Project-id is required");
+        }
+        if (!mongoose.Types.ObjectId.isValid(projectId)) {
+            throw new ApiError(400, "Invalid project-id");
+        }
+        const project = await ProjectModel.findById(projectId).populate("user");
+        if(!project) {
+            throw new ApiError(404, "Project not found");
+        }
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, project, "Project fetched successfully")
+        )
+    } catch (error) {
+        throw new ApiError(500, error.message)
+    }
+})
+
 export {
     createProject,
     updateProject,
     deleteProject,
-    getAllProjects
+    getAllProjects,
+    getSingleProject
 };
