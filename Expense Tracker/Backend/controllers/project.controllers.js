@@ -151,6 +151,7 @@ const getSingleProject = asyncHandler(async (req, res) => {
         throw new ApiError(500, error.message)
     }
 })
+    
 
 export {
     createProject,

@@ -141,7 +141,7 @@ const getIncomes = asyncHandler(async (req, res) => {
             .status(200)
             .json(new ApiResponse(200, incomes, "Project Incomes"))
         } else {
-            const incomes = await IncomeModel.find({project: { $exists: false }}).sort({date: 1})
+            const incomes = await IncomeModel.find({project: { $exists: false }}).sort({date: -1})
             return res
             .status(200)
             .json(new ApiResponse(200, incomes, "General Incomes"))

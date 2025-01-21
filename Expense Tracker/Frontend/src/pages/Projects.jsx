@@ -163,10 +163,9 @@ const Projects = () => {
             projects.map((project) => (
               <div
                 key={project._id}
-                onClick={() => goToProject(project._id)}
                 className="bg-neutral-100/40 relative rounded-md cursor-pointer p-2 flex items-center justify-between"
               >
-                <h1 className="text-lg">{project.name}</h1>
+                <h1 onClick={() => goToProject(project._id)} className="text-lg">{project.name}</h1>
                 <p className="text-sm opacity-55">
                   {project.createdAt.split("T")[0]}
                 </p>
@@ -186,7 +185,7 @@ const Projects = () => {
                     className="absolute opacity-0 right-8 top-3"
                   >
                     <ul className="z-10 relative bg-white rounded-md p-2">
-                      <li className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2">
+                      <li onClick={() => goToProject(project._id)} className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2">
                         <i className="ri-arrow-right-up-line"></i>
                         <p>Open</p>
                       </li>
