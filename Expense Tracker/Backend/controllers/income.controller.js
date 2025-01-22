@@ -8,7 +8,8 @@ const createIncome = asyncHandler(async (req, res) =>{
     try {
         const {tag, amount, category, projectId} = req.body;
 
-        if(tag==="" || category==="" || amount <= 0) {
+
+        if(tag==="" || amount <= 0) {
             throw new ApiError(400, "Mendatory fields are required.");
         }
 
@@ -49,17 +50,17 @@ const createIncome = asyncHandler(async (req, res) =>{
 
 const deleteIncome = asyncHandler(async (req, res) => {
     try {
-        const {incomeId} = req.body;
+        const {id} = req.body;
 
-        if(!incomeId) {
+        if(!id) {
             throw new ApiError(400, "Income Id required.")
         }
-        if(!mongoose.Types.ObjectId.isValid(incomeId)) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             throw new ApiError(403, "Income Id is not in valid format")
         }
 
-        await IncomeModel.findByIdAndDelete(incomeId);
-        const deletedIncome = await IncomeModel.findById(incomeId);
+        await IncomeModel.findByIdAndDelete(id);
+        const deletedIncome = await IncomeModel.findById(id);
         if(deletedIncome) {
             throw new ApiError(500, "Something went wrong with deleting the expense.")
         }
@@ -151,9 +152,27 @@ const getIncomes = asyncHandler(async (req, res) => {
     }
 })
 
+const getIncomesByUserId = asyncHandler(async (req, res) => {
+    try {
+        const {userId} = req.body;
+        if(userId) {
+            if(!mongoose.Types.ObjectId.isValid(userId)) {
+                throw new ApiError(403, "Invalid project id")
+            }
+            const incomes = await IncomeModel.find({user: new mongoose.Types.ObjectId(userId)}).sort({date: 1})
+            return res
+            .status(200)
+            .json(new ApiResponse(200, incomes, "Project Incomes"))
+        } 
+    } catch (error) {
+        throw new ApiError(500, error.message)
+    }
+})
+
 export {
     createIncome,
     deleteIncome,
     getIncomesTotal,
-    getIncomes
+    getIncomes,
+    getIncomesByUserId
 }

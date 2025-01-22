@@ -49,17 +49,17 @@ const createExpense = asyncHandler(async (req, res) => {
 
 const deleteExpense = asyncHandler(async (req, res) => {
   try {
-    const { expenseId } = req.body;
+    const { id } = req.body;
 
-    if (!expenseId) {
+    if (!id) {
       throw new ApiError(400, "Expense Id required.");
     }
-    if (!mongoose.Types.ObjectId.isValid(expenseId)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError(403, "Expense Id is not in valid format");
     }
 
-    await ExpenseModel.findByIdAndDelete(expenseId);
-    const deletedExpense = await ExpenseModel.findById(expenseId);
+    await ExpenseModel.findByIdAndDelete(id);
+    const deletedExpense = await ExpenseModel.findById(id);
     if (deletedExpense) {
       throw new ApiError(
         500,

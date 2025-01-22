@@ -6,6 +6,8 @@ import Projects from "../pages/Projects.jsx";
 import Transactions from "../pages/Transactions.jsx";
 import MainLayout from "../components/MainLayout.jsx";
 import SingleProject from "../pages/SingleProject.jsx";
+import Income from "../pages/Income.jsx";
+import Expense from "../pages/Expense.jsx";
 
 const MainRoutes = () => {
   return (
@@ -26,6 +28,9 @@ const MainRoutes = () => {
 
         {/* <Route path="/project/:projectId" element={<UserProtectedWrapper><SingleProject /></UserProtectedWrapper>}> */}
         <Route path="/transactions" element={<Transactions />} />
+        <Route path="/incomes" element={<Income />} />
+        <Route path="/expenses" element={<Expense />} />
+
       </Route>
     </Routes>
   );

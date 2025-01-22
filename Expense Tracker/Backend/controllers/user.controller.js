@@ -3,6 +3,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import UserModel from "../models/user.model.js";
 import redisClient from "../utils/redisClient.js";
+import IncomeModel from "../models/income.model.js";
+import ExpenseModel from "../models/expense.model.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -113,4 +115,30 @@ const logoutUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, getCurrentUser, logoutUser };
+const getAllGeneralTransactions = asyncHandler(async (req, res) => {
+  try {
+    var transactions = [];
+    const incomes = await IncomeModel.find({project: { $exists: false }});
+    const updatedIncomes = incomes.map(income => ({
+      ...income.toObject(), // Convert Mongoose document to plain object
+      type: 'income',
+    }));
+    transactions.push(...updatedIncomes);
+
+    const expenses = await ExpenseModel.find({project: { $exists: false }});
+    const updatedExpenses = expenses.map(expense => ({
+      ...expense.toObject(), // Convert Mongoose document to plain object
+      type: 'expense',
+    }));
+    transactions.push(...updatedExpenses);
+
+    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, transactions, "All general transactions"));
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
+
+export { registerUser, loginUser, getCurrentUser, logoutUser, getAllGeneralTransactions };
