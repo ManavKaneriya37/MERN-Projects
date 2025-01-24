@@ -58,7 +58,7 @@ const Transactions = () => {
   }
   
   return (
-    <div className="home p-5 h-full w-full overflow-hidden relative">
+    <div className="home p-5 h-full w-full overflow-hidden overflow-y-auto relative">
       <h1 className="text-xl">All General Transactions</h1>
       <div className="flex flex-col w-full gap-3 mt-6"> 
       {

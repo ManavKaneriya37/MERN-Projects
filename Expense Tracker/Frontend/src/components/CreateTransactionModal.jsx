@@ -42,6 +42,7 @@ const CreateTransactoinModal = ({ tag="Transaction" }) => {
             setIsModalOpen(false);
             createTransactoinRef.current.reset();
           setIsModalOpen(false);
+          location.reload();
         }
       })
       .catch((error) => {
@@ -53,9 +54,9 @@ const CreateTransactoinModal = ({ tag="Transaction" }) => {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-400 text-white my-2 mx-auto p-2 px-3 rounded-lg hover:bg-blue-500 ease-in duration-100"
+        className={`sticky top-0 left-0 z-20 shadow-lg shadow-zinc-500/20 ${tag==='income' ? 'bg-emerald-400 hover:bg-emerald-500' : 'bg-rose-400 hover:bg-rose-500' }  text-white my-2 mx-auto p-2 px-3 rounded-lg ease-in duration-100`}
       >
-        <i className="ri-add-line"></i> Create Income
+        <i className="ri-add-line"></i> Create {tag}
       </button>
       <div
         className={`${
@@ -116,8 +117,8 @@ const CreateTransactoinModal = ({ tag="Transaction" }) => {
             </select>
               <button
                 type="submit"
-                className="mt-4 capitalize bg-blue-400 w-auto mx-10 text-white py-2 rounded-md hover:bg-blue-500 ease-in duration-100"
-              >
+                className={`mt-4 capitalize ${tag==='income' ? 'bg-emerald-400 hover:bg-emerald-500' : 'bg-rose-400 hover:bg-rose-500' } w-auto mx-10 text-white py-2 rounded-md ease-in duration-100`
+              }>
                 Create {tag}
               </button>
             </form>

@@ -8,7 +8,7 @@ const createExpense = asyncHandler(async (req, res) => {
   try {
     const { tag, amount, category, projectId } = req.body;
 
-    if (tag === "" || category === "" || amount <= 0) {
+    if (tag === "" || amount <= 0) {
       throw new ApiError(400, "Mendatory fields are required.");
     }
     var createdExpense;
@@ -24,12 +24,14 @@ const createExpense = asyncHandler(async (req, res) => {
         amount,
         category,
         project: projectId,
+        user: req.user._id,
       });
     } else {
       createdExpense = await ExpenseModel.create({
         tag,
         amount,
         category,
+        user: req.user._id,
       });
     }
 
@@ -77,7 +79,30 @@ const deleteExpense = asyncHandler(async (req, res) => {
 
 const getExpensesTotal = asyncHandler(async (req, res) => {
   try {
-    const { projectId } = req.body;     
+    const { projectId } = req.body;  
+    
+    if (req.body.userId) {
+      if (!mongoose.Types.ObjectId.isValid(req.body.userId)) {
+        throw new ApiError(403, "User Id is not in valid format");
+      }
+
+      const total = await ExpenseModel.aggregate([
+        {
+          $match: {
+            user: new mongoose.Types.ObjectId(req.body.userId),
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
+      return res
+        .status(200)
+        .json(new ApiResponse(200, total[0].total, "Total income"));
+    }
 
     if (projectId) {
         if(!mongoose.Types.ObjectId.isValid(projectId)) {
@@ -148,4 +173,21 @@ const getExpenses = asyncHandler(async (req, res) => {
     }
 })
 
-export { createExpense, deleteExpense, getExpensesTotal, getExpenses };
+const getExpenseByUserId = asyncHandler(async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (userId) {
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw new ApiError(403, "Invalid project id");
+      }
+      const expenses = await ExpenseModel.find({ user: userId }).populate("project");
+      return res
+        .status(200)
+        .json(new ApiResponse(200, expenses, "User Expenses"));
+    }
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
+
+export { createExpense, deleteExpense, getExpensesTotal, getExpenses, getExpenseByUserId };

@@ -28,7 +28,7 @@ const MainRoutes = () => {
 
         {/* <Route path="/project/:projectId" element={<UserProtectedWrapper><SingleProject /></UserProtectedWrapper>}> */}
         <Route path="/transactions" element={<Transactions />} />
-        <Route path="/incomes" element={<Income />} />
+        <Route path="/incomes" element={<UserProtectedWrapper><Income /></UserProtectedWrapper>} />
         <Route path="/expenses" element={<Expense />} />
 
       </Route>

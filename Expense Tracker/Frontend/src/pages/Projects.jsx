@@ -97,7 +97,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="home p-5 h-full w-full overflow-hidden relative">
+    <div className="home p-5 h-full w-full overflow-hidden overflow-y-auto relative">
       <CreateProjectModal handler={handleCreateProject}/>
       <div>
         <div className="mt-3 flex flex-col gap-3">
@@ -105,9 +105,9 @@ const Projects = () => {
             projects.map((project) => (
               <div
                 key={project._id}
-                className="bg-neutral-100/40 relative rounded-md cursor-pointer p-2 flex items-center justify-between"
+                className="bg-neutral-100/40 hover:bg-neutral-100 ease duration-100 relative rounded-md p-2 flex items-center justify-between"
               >
-                <h1 onClick={() => goToProject(project._id)} className="text-lg">{project.name}</h1>
+                <h1 onClick={() => goToProject(project._id)} className="text-lg w-1/6 cursor-pointer">{project.name}</h1>
                 <p className="text-sm opacity-55">
                   {project.createdAt.split("T")[0]}
                 </p>

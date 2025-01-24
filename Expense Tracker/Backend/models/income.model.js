@@ -18,6 +18,10 @@ const incomeSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
     project: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
