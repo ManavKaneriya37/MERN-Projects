@@ -22,7 +22,7 @@ const Projects = () => {
         gsap.fromTo(
           panelRef.current,
           { opacity: 0, right: 0 },
-          { opacity: 1, right: "32px", duration: 0.2, scrub: true }
+          { opacity: 1, right: "32px", duration: 0.2 }
         );
       }
     },
@@ -47,7 +47,7 @@ const Projects = () => {
       .then((res) => {
         if (res.data.statusCode === 201) {
           setIsModalOpen(false);
-          createProjectFormRef.current.reset();
+          location.reload();
         }
       })
       .catch((err) => {
@@ -85,7 +85,6 @@ const Projects = () => {
       })
       .then((res) => {
         if (res.data.statusCode === 200) {
-          console.log(res.data.store);
           navigate(`/project/${projectId}`, {
             state: { project: res.data.store },
           });
@@ -96,9 +95,33 @@ const Projects = () => {
       });
   };
 
+  const handleDeleteProject = (projectId) => {
+    axios
+      .post(
+        "/api/projects/delete",
+        { projectId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setProjects(projects.filter((project) => project._id !== projectId));
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <div className="home p-5 h-full w-full overflow-hidden overflow-y-auto relative">
-      <CreateProjectModal handler={handleCreateProject}/>
+      <CreateProjectModal
+        ref={createProjectFormRef}
+        handler={handleCreateProject}
+      />
       <div>
         <div className="mt-3 flex flex-col gap-3">
           {projects && projects.length > 0 ? (
@@ -107,7 +130,12 @@ const Projects = () => {
                 key={project._id}
                 className="bg-neutral-100/40 hover:bg-neutral-100 ease duration-100 relative rounded-md p-2 flex items-center justify-between"
               >
-                <h1 onClick={() => goToProject(project._id)} className="text-lg w-1/6 cursor-pointer">{project.name}</h1>
+                <h1
+                  onClick={() => goToProject(project._id)}
+                  className="text-lg w-1/6 cursor-pointer"
+                >
+                  {project.name}
+                </h1>
                 <p className="text-sm opacity-55">
                   {project.createdAt.split("T")[0]}
                 </p>
@@ -127,11 +155,17 @@ const Projects = () => {
                     className="absolute opacity-0 right-8 top-3"
                   >
                     <ul className="z-10 relative bg-white rounded-md p-2">
-                      <li onClick={() => goToProject(project._id)} className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2">
+                      <li
+                        onClick={() => goToProject(project._id)}
+                        className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2"
+                      >
                         <i className="ri-arrow-right-up-line"></i>
                         <p>Open</p>
                       </li>
-                      <li className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2 ">
+                      <li
+                        onClick={() => handleDeleteProject(project._id)}
+                        className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2 "
+                      >
                         <i className="ri-delete-bin-7-line"></i>
                         <p>Delete</p>
                       </li>

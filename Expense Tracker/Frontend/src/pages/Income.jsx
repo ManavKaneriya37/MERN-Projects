@@ -88,15 +88,13 @@ const Income = () => {
       });
   };
 
-  console.log(incomes);
-
   return (
     <div className="home p-5 h-full w-full overflow-hidden overflow-y-auto relative">
       <CreateTransactionModal tag="income" />
       <div className="my-5">
         <h1 className="text-2xl text-center">Total Incomes</h1>
         <h1 className="text-3xl text-center text-emerald-500">
-          ₹{incomesTotal}
+          ₹{incomesTotal || 0}
         </h1>
       </div>
       <div className="h-full relative">
@@ -109,11 +107,11 @@ const Income = () => {
                 {income?.project?.name && (
                   <div className="text-xs text-gray-600 opacity-80">{income?.project?.name}</div>
                 )}
-                <div>{income.tag}</div>
+                <div>{income?.tag}</div>
               </div>
 
               <div className="text-center opacity-60 text-gray-500/70">
-                {income.date.split("T")[0]}
+                {income?.date?.split("T")[0]}
               </div>
               <div className={`flex items-center gap-3`}>
                 <div className="">₹{income.amount}</div>

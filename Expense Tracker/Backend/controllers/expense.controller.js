@@ -79,8 +79,8 @@ const deleteExpense = asyncHandler(async (req, res) => {
 
 const getExpensesTotal = asyncHandler(async (req, res) => {
   try {
-    const { projectId } = req.body;  
-    
+    const { projectId } = req.body;
+
     if (req.body.userId) {
       if (!mongoose.Types.ObjectId.isValid(req.body.userId)) {
         throw new ApiError(403, "User Id is not in valid format");
@@ -101,77 +101,87 @@ const getExpensesTotal = asyncHandler(async (req, res) => {
       ]);
       return res
         .status(200)
-        .json(new ApiResponse(200, total[0].total, "Total income"));
+        .json(new ApiResponse(200, total[0]?.total || 0, "Total income"));
     }
 
     if (projectId) {
-        if(!mongoose.Types.ObjectId.isValid(projectId)) {
-            throw new ApiError(403, "Project Id is not in valid format");
-        }
-        const total = await ExpenseModel.aggregate([
-          {
-            $match: {
-              project: new mongoose.Types.ObjectId(projectId),
-            },
+      if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new ApiError(403, "Project Id is not in valid format");
+      }
+      const total = await ExpenseModel.aggregate([
+        {
+          $match: {
+            project: new mongoose.Types.ObjectId(projectId),
           },
-          {
-              $group: {
-                  _id: null,
-                  total: { $sum: "$amount" },
-              }
-          }
-        ]);
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
       return res
         .status(200)
-        .json(new ApiResponse(200, total[0].total || 0, "Total expenses for the project"));
+        .json(
+          new ApiResponse(
+            200,
+            total[0]?.total || 0,
+            "Total expenses for the project"
+          )
+        );
     } else {
-        const total = await ExpenseModel.aggregate([
-            {
-                $match: {
-                    project: { $exists: false }
-                }
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: "$amount" },
-                }
-            }
-        ]);
+      const total = await ExpenseModel.aggregate([
+        {
+          $match: {
+            project: { $exists: false },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
 
-        return res
+      return res
         .status(200)
-        .json(new ApiResponse(200, total[0].total || 0, "Total of general expenses"));
+        .json(
+          new ApiResponse(200, total[0]?.total || 0, "Total of general expenses")
+        );
     }
   } catch (error) {
-    throw new ApiError(500, error.message); 
+    throw new ApiError(500, error.message);
   }
 });
 
 const getExpenses = asyncHandler(async (req, res) => {
-    try {
-        const { projectId } = req.body;
-        if (projectId) {
-            if(!mongoose.Types.ObjectId.isValid(projectId)) {
-                throw new ApiError(403, "Project Id is not in valid format");
-            }
-            const expenses = await ExpenseModel.find({ project: new mongoose.Types.ObjectId(projectId) });
-            return res
-            .status(200)
-            .json(new ApiResponse(200, expenses, "Expenses for the project"));
-        } else {
-            const expenses = await ExpenseModel.find({
-                project: { $exists: false }
-            })
+  try {
+    const { projectId } = req.body;
+    if (projectId) {
+      if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new ApiError(403, "Project Id is not in valid format");
+      }
+      const expenses = await ExpenseModel.find({
+        project: new mongoose.Types.ObjectId(projectId),
+      });
+      return res
+        .status(200)
+        .json(new ApiResponse(200, expenses, "Expenses for the project"));
+    } else {
+      const expenses = await ExpenseModel.find({
+        project: { $exists: false },
+      });
 
-            return res
-            .status(200)
-            .json(new ApiResponse(200, expenses, "General expenses"));
-        }
-    } catch (error) {
-        throw new ApiError(500, error.message);
+      return res
+        .status(200)
+        .json(new ApiResponse(200, expenses, "General expenses"));
     }
-})
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
 
 const getExpenseByUserId = asyncHandler(async (req, res) => {
   try {
@@ -180,7 +190,9 @@ const getExpenseByUserId = asyncHandler(async (req, res) => {
       if (!mongoose.Types.ObjectId.isValid(userId)) {
         throw new ApiError(403, "Invalid project id");
       }
-      const expenses = await ExpenseModel.find({ user: userId }).populate("project");
+      const expenses = await ExpenseModel.find({ user: userId }).populate(
+        "project"
+      );
       return res
         .status(200)
         .json(new ApiResponse(200, expenses, "User Expenses"));
@@ -190,4 +202,24 @@ const getExpenseByUserId = asyncHandler(async (req, res) => {
   }
 });
 
-export { createExpense, deleteExpense, getExpensesTotal, getExpenses, getExpenseByUserId };
+
+const getAllExpenses = asyncHandler(async (req, res) => {
+  try {
+    const { userId  } = req.body;
+    const expenses = await ExpenseModel.find({user: userId})
+    return res
+      .status(200)
+      .json(new ApiResponse(200, expenses, "All Expenses"));
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
+
+export {
+  createExpense,
+  deleteExpense,
+  getExpensesTotal,
+  getExpenses,
+  getExpenseByUserId,
+  getAllExpenses
+};

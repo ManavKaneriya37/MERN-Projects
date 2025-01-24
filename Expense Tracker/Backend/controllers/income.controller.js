@@ -98,8 +98,8 @@ const getIncomesTotal = asyncHandler(async (req, res) => {
         },
       ]);
       return res
-        .status(200)
-        .json(new ApiResponse(200, total[0].total, "Total income"));
+        .status(200)  
+        .json(new ApiResponse(200, total[0]?.total, "Total income"));
     }
 
     if (projectId) {
@@ -123,7 +123,7 @@ const getIncomesTotal = asyncHandler(async (req, res) => {
 
       return res
         .status(200)
-        .json(new ApiResponse(200, total[0].total, "Total income"));
+        .json(new ApiResponse(200, total[0]?.total, "Total income"));
     } else {
       const total = await IncomeModel.aggregate([
         {
@@ -141,7 +141,7 @@ const getIncomesTotal = asyncHandler(async (req, res) => {
 
       return res
         .status(200)
-        .json(new ApiResponse(200, total[0].total, "Total income"));
+        .json(new ApiResponse(200, total[0]?.total, "Total income"));
     }
   } catch (error) {
     throw new ApiError(500, error.message);
@@ -191,10 +191,23 @@ const getIncomesByUserId = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllIncomes = asyncHandler(async (req, res) => {
+  try {
+    const { userId  } = req.body;
+    const incomes = await IncomeModel.find({user: userId})
+    return res
+      .status(200)
+      .json(new ApiResponse(200, incomes, "All Incomes"));
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
+
 export {
   createIncome,
   deleteIncome,
   getIncomesTotal,
   getIncomes,
   getIncomesByUserId,
+  getAllIncomes
 };

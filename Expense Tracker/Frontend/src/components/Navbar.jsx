@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import "remixicon/fonts/remixicon.css";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserDataContext } from "../contexts/UserContext";
 
 const Navbar = () => {
   const { user } = useContext(UserDataContext);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     axios
@@ -35,7 +36,7 @@ const Navbar = () => {
             </div>
             <div>
               <p className="font-semibold"> {user?.name} </p>
-              <button className="bg-white/70 text-black px-3 hover:bg-white/50 ease duration-100 py-1 rounded-md mt-1">Edit Profile</button>
+              <button onClick={() => navigate('/user/edit-profile')} className="bg-white/70 text-black px-3 hover:bg-white/50 ease duration-100 py-1 rounded-md mt-1">Edit Profile</button>
             </div>
           </div>
           <NavLink

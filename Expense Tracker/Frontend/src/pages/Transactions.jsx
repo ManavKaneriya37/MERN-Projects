@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
-import {useGSAP} from "@gsap/react";
+import { useGSAP } from "@gsap/react";
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -24,7 +24,7 @@ const Transactions = () => {
 
   useEffect(() => {
     axios
-      .post(
+      .get(
         "/api/users/transactoins/general",
         {},
         {
@@ -41,52 +41,84 @@ const Transactions = () => {
       });
   }, []);
 
-  const handelTransactionDelete = (transaction) => {
-    axios.post(`/api/${transaction.type}s/delete`, {
-      id: transaction._id,
-    }
-    )
-    .then((response) => {
-      if(response.data.statusCode === 200) {
-        setTransactions(transactions.filter((t) => t._id !== transaction._id));
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    }
-    );
-  }
-  
+  const handleTransactionDelete = (transaction) => {
+    axios
+      .post(`/api/${transaction.type}s/delete`, {
+        id: transaction._id,
+      })
+      .then((response) => {
+        if (response.data.statusCode === 200) {
+          setTransactions(
+            transactions.filter((t) => t._id !== transaction._id)
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div className="home p-5 h-full w-full overflow-hidden overflow-y-auto relative">
       <h1 className="text-xl">All General Transactions</h1>
-      <div className="flex flex-col w-full gap-3 mt-6"> 
-      {
-        transactions && transactions.map((transaction) => (
-          <div className={`bg-gray-100/50 w-full relative flex items-center justify-between px-5 py-2 rounded`}> 
-            <div className={`${transaction.type == 'income' ? 'text-emerald-400' : 'text-red-400'} w-1/4`}>{transaction.tag}</div>
-            <div className="text-center opacity-60 text-gray-500">{transaction.date.split('T')[0]}</div>
-            <div className={`${transaction.type == 'income' ? 'text-emerald-400' : 'text-red-400'} flex itmes-center gap-3`}><div className="">{transaction.amount}</div> <i onClick={() =>
+      <div className="flex flex-col w-full gap-3 mt-6">
+        {transactions && transactions.length > 0 ? (
+          transactions.map((transaction) => (
+            <div
+              className={`bg-gray-100/50 w-full relative flex items-center justify-between px-5 py-2 rounded`}
+            >
+              <div
+                className={`${
+                  transaction.type == "income"
+                    ? "text-emerald-400"
+                    : "text-red-400"
+                } w-1/4`}
+              >
+                {transaction.tag}
+              </div>
+              <div className="text-center opacity-60 text-gray-500">
+                {transaction?.createdAt?.split("T")[0]}
+              </div>
+              <div
+                className={`${
+                  transaction.type == "income"
+                    ? "text-emerald-400"
+                    : "text-red-400"
+                } flex items-center gap-3`}
+              >
+                <div className="">{transaction.amount}</div>{" "}
+                <i
+                  onClick={() =>
                     setTransactionMenu(
-                      transactionMenu === transaction._id ? null : transaction._id
+                      transactionMenu === transaction._id
+                        ? null
+                        : transaction._id
                     )
-                  } className="text-black cursor-pointer px-2 ri-more-2-fill"></i> </div>
+                  }
+                  className="text-black cursor-pointer px-2 ri-more-2-fill"
+                ></i>{" "}
+              </div>
               {transactionMenu === transaction._id && (
                 <div
-                ref={panelRef}
-                className="absolute opacity-0 right-8 top-3"
-              >
-                <ul className="z-10 relative bg-white rounded-md p-2">
-                  <li onClick={() => handelTransactionDelete(transaction)} className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2 ">
-                    <i className="ri-delete-bin-7-line"></i>
-                    <p>Delete</p>
-                  </li>
-                </ul>
-              </div> 
+                  ref={panelRef}
+                  className="absolute opacity-0 right-8 top-3"
+                >
+                  <ul className="z-10 relative bg-white rounded-md p-2">
+                    <li
+                      onClick={() => handleTransactionDelete(transaction)}
+                      className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2 "
+                    >
+                      <i className="ri-delete-bin-7-line"></i>
+                      <p>Delete</p>
+                    </li>
+                  </ul>
+                </div>
               )}
-          </div>
-        ))
-      }
+            </div>
+          ))
+        ) : (
+          <p>No transactions</p>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,92 @@
-import React from "react";
+import React, {useEffect, useState, useContext} from "react";
+import axios from "axios";
 
 const Home = () => {
+
+  const [transactions, setTransactions] = useState([]);
+  const [incomes, setIncomes] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+    axios.get("/api/users/current-user", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+    .then((response) => {
+      setUser(response.data.store);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }, []);
+
+  useEffect(() => {
+    if(user) {
+      axios
+      .get(
+        "/api/users/transactoins/general",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((response) => {
+        setTransactions(response.data.store);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+
+      axios.post("/api/incomes/all/get-incomes", {
+        userId: user?._id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setIncomes(response.data.store);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    }
+   
+    axios.post("/api/expenses/all/get-expenses", {
+      userId: user?._id,
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+    .then((response) => {
+      setExpenses(response.data.store);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  },[user]);
+
+  
+  const minIncomeAmount = incomes.reduce((min, item) => (item.amount < min ? item.amount : min), Infinity);
+  const maxIncomeAmount = incomes.reduce((max, item) => (item.amount > max ? item.amount : max), 0);
+  
+  const minExpenseAmount = expenses.reduce((min, item) => (item.amount < min ? item.amount : min), Infinity);
+  const maxExpenseAmount = expenses.reduce((max, item) => (item.amount > max ? item.amount : max), 0);
+
+  const totalIncome = incomes.reduce((total, item) => total + item.amount, 0);
+  const totalExpense = expenses.reduce((total, item) => total + item.amount, 0);
+  const totalBalance = totalIncome - totalExpense;
+
+  
   return (
     <>
       <section className="home p-2 h-full w-full flex items-center justify-between overflow-hidden">
@@ -15,19 +101,19 @@ const Home = () => {
               <h3 className="font-semibold text-green-500 my-1 text-lg">
                 Total Income
               </h3>
-              <p className="text-xl font-bold opacity-75">17,700</p>
+              <p className="text-xl font-bold opacity-75">{totalIncome}</p>
             </article>
             <article className="px-5 w-44 py-3 bg-rose-100 rounded-md text-center">
               <h3 className="font-semibold text-red-500 my-1 text-lg">
                 Total Expenses
               </h3>
-              <p className="text-xl font-bold opacity-75">1700</p>
+              <p className="text-xl font-bold opacity-75">{totalExpense}</p>
             </article>
             <article className="px-5 w-44 py-3 bg-zinc-200 rounded-md text-center">
               <h3 className="font-semibold my-1 text-lg text-gray-600">
                 Total Balance
               </h3>
-              <p className="text-xl font-bold opacity-75">+16,000</p>
+              <p className="text-xl font-bold opacity-75">{`${totalBalance > 0 ? '+' : ''}`+totalBalance}</p>
             </article>
           </div>
         </aside>
@@ -37,22 +123,12 @@ const Home = () => {
               Recent Transactions
             </h1>
             <div className="w-full h-fit px-2 flex flex-col gap-2">
-              <span className=" w-full py-2 px-2 bg-zinc-300/10 text-red-500 flex rounded-xl items-center justify-between">
-                <h5>Rent</h5>
-                <p>-10000</p>
-              </span>
-              <span className="w-full py-2 px-2 bg-zinc-300/10 text-green-500 flex rounded-xl items-center justify-between">
-                <h5>Bitcoin</h5>
-                <p>+8000</p>
-              </span>
-              <span className="w-full py-2 px-2 bg-zinc-300/10 text-red-500 flex rounded-xl items-center justify-between">
-                <h5>Dentist Appointment</h5>
-                <p>-3000</p>
-              </span>
-              <span className="w-full py-2 px-2 bg-zinc-300/10 text-red-500 flex rounded-xl items-center justify-between">
-                <h5>Mobile Recharge</h5>
-                <p>-860</p>
-              </span>
+              {transactions.slice(0, 4).map((transaction, index) => (
+                <span key={index} className={`${transaction.type === 'income' ? 'text-emerald-500' : 'text-rose-500'} w-full py-2 px-2 bg-zinc-300/10 flex rounded-xl items-center justify-between`}>
+                  <h5>{transaction?.tag}</h5>
+                  <p>{`${transaction.type==='income' ? '+' : '-'}${transaction.amount}`}</p>
+                </span>
+              ))}
             </div>
           </div>
           <div className="p-2">
@@ -63,8 +139,8 @@ const Home = () => {
                 <h4>Max</h4>
               </span>
               <span className="flex bg-green-300/40 px-2 rounded-lg py-1 w-full items-center justify-between">
-                <h4>1200</h4>
-                <h4>8000</h4>
+                <h4>{minIncomeAmount}</h4>
+                <h4>{maxIncomeAmount}</h4>
               </span>
             </article>
             <article className="mt-7 bg-rose-200/40 py-4 px-3 rounded-md">
@@ -74,8 +150,8 @@ const Home = () => {
                 <h4>Max</h4>
               </span>
               <span className="flex bg-red-300/40 px-2 rounded-lg py-1 w-full items-center justify-between">
-                <h4>800</h4>
-                <h4>10000</h4>
+                <h4>{minExpenseAmount}</h4>
+                <h4>{maxExpenseAmount }</h4>
               </span>
             </article>
           </div>

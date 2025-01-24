@@ -5,6 +5,7 @@ import UserModel from "../models/user.model.js";
 import redisClient from "../utils/redisClient.js";
 import IncomeModel from "../models/income.model.js";
 import ExpenseModel from "../models/expense.model.js";
+import bcrypt from "bcrypt";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -118,21 +119,21 @@ const logoutUser = asyncHandler(async (req, res) => {
 const getAllGeneralTransactions = asyncHandler(async (req, res) => {
   try {
     var transactions = [];
-    const incomes = await IncomeModel.find({project: { $exists: false }});
-    const updatedIncomes = incomes.map(income => ({
+    const incomes = await IncomeModel.find({ project: { $exists: false } });
+    const updatedIncomes = incomes.map((income) => ({
       ...income.toObject(), // Convert Mongoose document to plain object
-      type: 'income',
+      type: "income",
     }));
     transactions.push(...updatedIncomes);
 
-    const expenses = await ExpenseModel.find({project: { $exists: false }});
-    const updatedExpenses = expenses.map(expense => ({
+    const expenses = await ExpenseModel.find({ project: { $exists: false } });
+    const updatedExpenses = expenses.map((expense) => ({
       ...expense.toObject(), // Convert Mongoose document to plain object
-      type: 'expense',
+      type: "expense",
     }));
     transactions.push(...updatedExpenses);
 
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return res
       .status(200)
       .json(new ApiResponse(200, transactions, "All general transactions"));
@@ -141,4 +142,38 @@ const getAllGeneralTransactions = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, getCurrentUser, logoutUser, getAllGeneralTransactions };
+const updateUser = asyncHandler(async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    var updatedUser;
+
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedUser = await UserModel.findByIdAndUpdate(req.user._id, {
+        name,
+        email,
+        password: hashedPassword,
+      });
+    } else {
+      updatedUser = await UserModel.findByIdAndUpdate(req.user._id, {
+        name,
+        email,
+      });
+    }
+    return res
+      .status(200)
+      .json(new ApiResponse(200, updatedUser, "User updated successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong with updating user");
+  }
+});
+
+export {
+  registerUser,
+  loginUser,
+  getCurrentUser,
+  logoutUser,
+  getAllGeneralTransactions,
+  updateUser,
+};

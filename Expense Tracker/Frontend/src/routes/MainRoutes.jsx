@@ -8,6 +8,8 @@ import MainLayout from "../components/MainLayout.jsx";
 import SingleProject from "../pages/SingleProject.jsx";
 import Income from "../pages/Income.jsx";
 import Expense from "../pages/Expense.jsx";
+import EditProfile from "../pages/EditProfile.jsx";
+import EditProject from "../pages/EditProject.jsx";
 
 const MainRoutes = () => {
   return (
@@ -30,7 +32,8 @@ const MainRoutes = () => {
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/incomes" element={<UserProtectedWrapper><Income /></UserProtectedWrapper>} />
         <Route path="/expenses" element={<Expense />} />
-
+        <Route path="/user/edit-profile" element={<UserProtectedWrapper><EditProfile /></UserProtectedWrapper>} />
+        <Route path="/update-project/:projectId" element={<UserProtectedWrapper><EditProject /></UserProtectedWrapper>} />
       </Route>
     </Routes>
   );

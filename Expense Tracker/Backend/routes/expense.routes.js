@@ -5,7 +5,8 @@ import {
     deleteExpense,
     getExpensesTotal,
     getExpenses,
-    getExpenseByUserId
+    getExpenseByUserId,
+    getAllExpenses
 } from "../controllers/expense.controller.js";
 
 const router = Router();
@@ -15,6 +16,7 @@ router.route('/delete').post(verifyUser, deleteExpense);
 router.route('/get-total').post(verifyUser, getExpensesTotal);
 router.route('/get-expenses').post(verifyUser, getExpenses);
 router.route('/user/get-expenses').post(verifyUser, getExpenseByUserId);
+router.route('/all/get-expenses').post(verifyUser, getAllExpenses);
 
 
 export default router;

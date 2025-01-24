@@ -51,16 +51,16 @@ const createProject = asyncHandler(async (req, res) => {
 
 const updateProject = asyncHandler(async ( req, res ) => {
     try {
-        const {name, description, budget, projectId} = req.body;
+        const {name, description, budget, _id} = req.body;
 
-        if(!projectId) {
+        if(!_id) {
             throw new ApiError(400, "Project-id is required");
         }
-        if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        if (!mongoose.Types.ObjectId.isValid(_id)) {
             throw new ApiError(400, "Invalid project-id");
         }
 
-        const existingProject = await ProjectModel.findOneAndUpdate({_id: projectId}, {
+        const existingProject = await ProjectModel.findOneAndUpdate({_id: _id}, {
             name,
             description,
             budget

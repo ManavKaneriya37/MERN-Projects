@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
 
-const CreateProjectModal = ({handler}) => {
+const CreateProjectModal = ({handler, ref}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const createIncomeRef = useRef();
   return (
     <>
       <button
@@ -28,7 +27,6 @@ const CreateProjectModal = ({handler}) => {
             <h1 className="text-xl text-center p-2">Project details</h1>
 
             <form
-              ref={createIncomeRef}
               onSubmit={handler}
               className="flex flex-col gap-3 relative my-3"
             >

@@ -107,11 +107,11 @@ const Expense = () => {
                 {expense?.project?.name && (
                   <div className="text-xs text-gray-600 opacity-80">{expense?.project?.name}</div>
                 )}
-                <div>{expense.tag}</div>
+                <div>{expense?.tag}</div>
               </div>
 
               <div className="text-center opacity-60 text-gray-500/70">
-                {expense.date.split("T")[0]}
+                {expense?.date?.split("T")[0]}
               </div>
               <div className={`flex items-center gap-3`}>
                 <div className="">₹{expense.amount}</div>

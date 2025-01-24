@@ -9,11 +9,6 @@ const incomeSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
-    date: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
     category: {
         type: String,
         trim: true
