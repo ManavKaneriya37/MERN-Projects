@@ -6,7 +6,7 @@ const EditProject = () => {
   const [projectData, setProjectData] = useState({});
   const navigate = useNavigate();
 
-const { projectId } = useParams();
+  const { projectId } = useParams();
 
   useEffect(() => {
     axios
@@ -23,7 +23,6 @@ const { projectId } = useParams();
       });
   }, []);
 
-
   const handleProjectChange = (e) => {
     setProjectData({ ...projectData, [e.target.name]: e.target.value });
   };
@@ -38,7 +37,7 @@ const { projectId } = useParams();
       })
       .then((response) => {
         console.log(response.data.store);
-        navigate('/projects')
+        navigate("/projects");
       })
       .catch((error) => {
         console.log(error);
@@ -59,7 +58,7 @@ const { projectId } = useParams();
             Project Name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             type="text"
             placeholder="Project name"
             name="name"
@@ -75,32 +74,16 @@ const { projectId } = useParams();
             Description
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             name="description"
             placeholder="Description"
             value={projectData.description || ""}
             onChange={handleProjectChange}
           />
         </div>
-        <div className="mb-6">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
-            Budget
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            type="number"
-            name="budget"
-            value={projectData.budget || ""}
-            placeholder="Change budget"
-            onChange={handleProjectChange}
-          />
-        </div>
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Save Changes

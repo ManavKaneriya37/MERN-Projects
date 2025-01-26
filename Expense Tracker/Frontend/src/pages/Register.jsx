@@ -45,7 +45,7 @@ const Register = () => {
             </h1>
 
             <form
-              autoComplete="false"
+              autoComplete="off"
               ref={formRef}
               onSubmit={handleRegister}
               className="flex flex-col gap-4 my-4 px-5"
@@ -53,21 +53,21 @@ const Register = () => {
               <input
                 type="text"
                 name="name"
-                autoComplete="false"
+                autoComplete="off"
                 placeholder="Name"
                 className="w-full p-2 rounded-md outline-none border-[1px] border-black/20"
               />
               <input
                 type="email"
                 name="email"
-                autoComplete="false"
+                autoComplete="off"
                 placeholder="Email"
                 className="w-full p-2 rounded-md outline-none border-[1px] border-black/20"
               />
               <input
                 type="password"
                 name="password"
-                autoComplete="false"
+                autoComplete="off"
                 placeholder="Password"
                 className="w-full p-2 rounded-md outline-none border-[1px] border-black/20"
               />

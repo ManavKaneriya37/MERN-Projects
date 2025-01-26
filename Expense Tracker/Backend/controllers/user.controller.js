@@ -121,14 +121,14 @@ const getAllGeneralTransactions = asyncHandler(async (req, res) => {
     var transactions = [];
     const incomes = await IncomeModel.find({ project: { $exists: false } });
     const updatedIncomes = incomes.map((income) => ({
-      ...income.toObject(), // Convert Mongoose document to plain object
+      ...income.toObject(),
       type: "income",
     }));
     transactions.push(...updatedIncomes);
 
     const expenses = await ExpenseModel.find({ project: { $exists: false } });
     const updatedExpenses = expenses.map((expense) => ({
-      ...expense.toObject(), // Convert Mongoose document to plain object
+      ...expense.toObject(),
       type: "expense",
     }));
     transactions.push(...updatedExpenses);
@@ -169,6 +169,34 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllTransactions = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    var transactions = [];
+    const incomes = await IncomeModel.find({ user: userId });
+    const updatedIncomes = incomes.map((income) => ({
+      ...income.toObject(),
+      type: "income",
+    }));
+    transactions.push(...updatedIncomes);
+
+    const expenses = await ExpenseModel.find({ user: userId });
+    const updatedExpenses = expenses.map((expense) => ({
+      ...expense.toObject(),
+      type: "expense",
+    }));
+    transactions.push(...updatedExpenses);
+
+    transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, transactions, "Transactions retrieved successfully"));
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+})
+
 export {
   registerUser,
   loginUser,
@@ -176,4 +204,5 @@ export {
   logoutUser,
   getAllGeneralTransactions,
   updateUser,
+  getAllTransactions
 };

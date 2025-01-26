@@ -157,14 +157,23 @@ const Projects = () => {
                     <ul className="z-10 relative bg-white rounded-md p-2">
                       <li
                         onClick={() => goToProject(project._id)}
-                        className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2"
+                        className="hover:bg-neutral-100/60 text-blue-500 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2"
                       >
                         <i className="ri-arrow-right-up-line"></i>
                         <p>Open</p>
                       </li>
                       <li
+                        onClick={() =>
+                          navigate(`/update-project/${project._id}`)
+                        }
+                        className="hover:bg-neutral-100/60 text-zinc-700 cursor-pointer p-1 px-4 text-sm shadow-sm flex items-center gap-2 "
+                      >
+                        <i className="ri-pencil-line text-lg"></i>
+                        <p>Edit</p>
+                      </li>
+                      <li
                         onClick={() => handleDeleteProject(project._id)}
-                        className="hover:bg-neutral-100/60 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2 "
+                        className="hover:bg-neutral-100/60 text-rose-500 cursor-pointer p-2 px-4 text-sm shadow-sm flex items-center gap-2 "
                       >
                         <i className="ri-delete-bin-7-line"></i>
                         <p>Delete</p>

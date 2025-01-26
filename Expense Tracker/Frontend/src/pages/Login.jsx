@@ -1,19 +1,18 @@
 import React, { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import { UserDataContext } from "../contexts/UserContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const formRef = useRef();
   const { setUser } = useContext(UserDataContext);
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const formData = Object.fromEntries(new FormData(e.currentTarget));
 
     const response = await axios.post("/api/users/login", formData);
-    
 
     if (response.data.statusCode === 200) {
       localStorage.setItem("token", response.data.store.token);
@@ -51,12 +50,14 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
+                autoComplete="off"
                 placeholder="Email"
                 className="w-full p-2 rounded-md outline-none border-[1px] border-black/20"
               />
               <input
                 type="password"
                 name="password"
+                autoComplete="off"
                 placeholder="Password"
                 className="w-full p-2 rounded-md outline-none border-[1px] border-black/20"
               />

@@ -13,7 +13,8 @@ const SingleProject = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.post(
+    axios
+      .post(
         "/api/incomes/get-incomes",
         { projectId: project._id },
         {
@@ -31,59 +32,72 @@ const SingleProject = () => {
         console.error(err);
       });
 
-    axios.post(
-      "/api/expenses/get-expenses",
-      { projectId: project._id },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    )
-    .then((res) => {
-      if (res.data.statusCode === 200) {
-        setExpenses(res.data.store);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    axios
+      .post(
+        "/api/expenses/get-expenses",
+        { projectId: project._id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setExpenses(res.data.store);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
-    axios.post("/api/incomes/get-total", { projectId: project._id }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-    .then((res) => {
-      if (res.data.statusCode === 200) {
-        setTotalIncome(res.data.store);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    axios
+      .post(
+        "/api/incomes/get-total",
+        { projectId: project._id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setTotalIncome(res.data.store);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
-    axios.post("/api/expenses/get-total", { projectId: project._id }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-    .then((res) => {
-      if (res.data.statusCode === 200) {
-        setTotalExpense(res.data.store);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    axios
+      .post(
+        "/api/expenses/get-total",
+        { projectId: project._id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setTotalExpense(res.data.store);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
-
 
   return (
     <div className="home p-5 h-full w-full overflow-hidden overflow-y-auto relative">
       <div className="flex items-center justify-between px-7">
         <h1 className="text-2xl font-bold">{project.name}</h1>
-        <button onClick={() => navigate(`/update-project/${project._id}`)} className="bg-zinc-600 text-white p-1 px-6 rounded-lg hover:bg-gray-500 ease-in duration-100">
+        <button
+          onClick={() => navigate(`/update-project/${project._id}`)}
+          className="border-2 border-gray-600 p-1 px-6 rounded-lg hover:bg-gray-500 hover:text-white ease-in duration-100"
+        >
           Edit
         </button>
       </div>
@@ -108,36 +122,41 @@ const SingleProject = () => {
           </div>
         </div>
       </section>
-      {project.budget !== 0 && (
-        <span className="flex justify-end px-5 my-2">
-          <p>Budget: {project.budget}</p>
-        </span>
-      )}
       <div className="mt-6">
         <h1 className="text-lg">Recent Transactions</h1>
         <div className="flex items-start gap-10 w-full h-fit py-3">
           <div className="w-1/2 h-full">
             <article className="w-full flex flex-col gap-3 justify-between">
-              {expenses &&
+              {expenses && expenses.length > 0 ? (
                 expenses.map((expense) => (
                   <div className="w-full flex items-center gap-10 justify-between bg-red-200 rounded-md px-2 py-1">
                     <p>{expense.tag}</p>
                     <p>{expense?.category}</p>
                     <p>₹{expense.amount}</p>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p className="text-gray-600 text-center mt-5 text-sm">
+                  No expenses found
+                </p>
+              )}
             </article>
           </div>
           <div className="w-1/2 h-full">
             <article className="w-full flex flex-col gap-3 justify-between">
-              {incomes &&
+              {incomes && incomes.length > 0 ? (
                 incomes.map((income) => (
                   <div className="w-full flex gap-10 items-center justify-between bg-green-200 rounded-md px-2 py-1">
                     <p>{income.tag}</p>
                     <p>{income?.category}</p>
                     <p>₹{income.amount}</p>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p className="text-gray-600 text-center mt-5 text-sm">
+                  No incomes found
+                </p>
+              )}
             </article>
           </div>
         </div>

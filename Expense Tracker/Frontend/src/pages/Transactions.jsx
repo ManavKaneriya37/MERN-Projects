@@ -25,7 +25,7 @@ const Transactions = () => {
   useEffect(() => {
     axios
       .get(
-        "/api/users/transactoins/general",
+        "/api/users/transactions/general",
         {},
         {
           headers: {

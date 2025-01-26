@@ -46,7 +46,7 @@ const EditProfile = () => {
     <div className="home p-5 h-full w-full overflow-hidden relative">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-white rounded pt-6 pb-8 mb-4 px-10"
       >
         <div className="mb-4">
           <label
@@ -56,7 +56,7 @@ const EditProfile = () => {
             Username
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="username"
             type="text"
             name="name"
@@ -73,7 +73,7 @@ const EditProfile = () => {
             Email
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
             type="email"
             name="email"
@@ -90,7 +90,7 @@ const EditProfile = () => {
             Password
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
             type="password"
             name="password"
@@ -101,7 +101,7 @@ const EditProfile = () => {
         </div>
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Save Changes
