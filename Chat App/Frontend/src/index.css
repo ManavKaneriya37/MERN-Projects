@@ -10,3 +10,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.conversation::-webkit-scrollbar {
+  background-color: transparent;
+  width: 0.7rem;
+
+}
+.conversation::-webkit-scrollbar-thumb {
+  background-color: #f4f2f2;
+  border-radius: 0.375rem;
+}
+.participants-list {
+  height: calc(100vh - 100px);
+}
+aside .participants-list::-webkit-scrollbar {
+  background-color: transparent;
+  width: 0.5rem;
+}
+aside .participants-list::-webkit-scrollbar-thumb {
+  background-color: #e3e2e2;
+  border-radius: 0.375rem;
+}

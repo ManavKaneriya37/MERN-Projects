@@ -10,7 +10,8 @@ const Home = () => {
             Connect with friends and family in real-time, share messages, and
             enjoy seamless communication!
           </p>
-          <section className="w-full h-full md:flex items-center justify-between mt-10">
+          <div className="line w-full h-px bg-black/20 mt-10 "></div>
+          <section className="w-full h-full md:flex items-center justify-between">
             <div className="flex flex-col items-center justify-center gap-3">
               <div className="text-xl opacity-80">Join a room</div>
               <input
